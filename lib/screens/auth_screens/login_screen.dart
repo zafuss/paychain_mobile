@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:paychain_mobile/config/color_const.dart';
 import 'package:paychain_mobile/config/demension_const.dart';
+import 'package:paychain_mobile/features/auth/controllers/auth_controller.dart';
 
 import '../../config/routes.dart';
 
@@ -15,6 +16,9 @@ class LoginScreen extends StatelessWidget {
     //   statusBarColor: ColorPalette.primary1, // Màu nền của status bar
     //   statusBarIconBrightness: Brightness.light,
     // ));
+    final authController = Get.put(AuthController());
+    final _emailController = TextEditingController();
+    final _passwordController = TextEditingController();
     return Scaffold(
       body: Stack(
         children: [
@@ -69,14 +73,16 @@ class LoginScreen extends StatelessWidget {
                               height: 200,
                             ),
                           ),
-                          const TextField(
+                          TextField(
+                            controller: _emailController,
                             decoration: InputDecoration(
                               labelText: 'Email',
                               border: OutlineInputBorder(),
                             ),
                           ),
                           const SizedBox(height: 16),
-                          const TextField(
+                          TextField(
+                            controller: _passwordController,
                             decoration: InputDecoration(
                               labelText: 'Mật khẩu',
                               border: OutlineInputBorder(),
@@ -103,7 +109,11 @@ class LoginScreen extends StatelessWidget {
                           const SizedBox(height: 24),
                           ElevatedButton(
                             onPressed: () {
-                              Get.offAndToNamed(Routes.infoScreen);
+                              // print('Button pressed');
+                              authController.loginUser(
+                                _emailController.text,
+                                _passwordController.text,
+                              );
                             },
                             child: const Text('Đăng nhập'),
                           ),
