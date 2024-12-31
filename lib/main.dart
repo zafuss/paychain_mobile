@@ -1,4 +1,4 @@
-  import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:paychain_mobile/config/routes.dart';
 import 'package:paychain_mobile/config/theme_const.dart';
@@ -18,6 +18,6 @@ class MyApp extends StatelessWidget {
         getPages: getPages,
         title: 'Flutter Demo',
         theme: AppTheme.lightTheme(),
-        initialRoute: Routes.registerScreen);
+        initialRoute: Routes.loginScreen);
   }
 }

@@ -16,9 +16,7 @@ class LoginScreen extends StatelessWidget {
     //   statusBarColor: ColorPalette.primary1, // Màu nền của status bar
     //   statusBarIconBrightness: Brightness.light,
     // ));
-    final authController = Get.put(AuthController());
-    final _emailController = TextEditingController();
-    final _passwordController = TextEditingController();
+    final authController = Get.put(AuthController(), permanent: true);
     return Scaffold(
       body: Stack(
         children: [
@@ -74,16 +72,16 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ),
                           TextField(
-                            controller: _emailController,
-                            decoration: InputDecoration(
+                            controller: authController.emailController,
+                            decoration: const InputDecoration(
                               labelText: 'Email',
                               border: OutlineInputBorder(),
                             ),
                           ),
                           const SizedBox(height: 16),
                           TextField(
-                            controller: _passwordController,
-                            decoration: InputDecoration(
+                            controller: authController.passwordController,
+                            decoration: const InputDecoration(
                               labelText: 'Mật khẩu',
                               border: OutlineInputBorder(),
                             ),
@@ -107,15 +105,19 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          ElevatedButton(
-                            onPressed: () {
-                              // print('Button pressed');
-                              authController.loginUser(
-                                _emailController.text,
-                                _passwordController.text,
-                              );
-                            },
-                            child: const Text('Đăng nhập'),
+                          Obx(
+                            () => ElevatedButton(
+                              onPressed: () async {
+                                await authController.loginUser();
+                              },
+                              child: authController.isLoading.value
+                                  ? const Center(
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : const Text('Đăng nhập'),
+                            ),
                           ),
                         ],
                       ),
@@ -129,18 +131,19 @@ class LoginScreen extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: Padding(
-                    padding: EdgeInsets.only(bottom: kMinPadding),
+                    padding: const EdgeInsets.only(bottom: kMinPadding),
                     child: TextButton(
                       onPressed: () {
                         Get.offAndToNamed(Routes.registerScreen);
+                        authController.resetText();
                       },
                       child: RichText(
                           text: TextSpan(
                               style: AppTextStyles.body1
                                   .copyWith(color: Colors.black),
                               text: 'Bạn chưa có tài khoản? ',
-                              children: [
-                            const TextSpan(
+                              children: const [
+                            TextSpan(
                                 text: 'Đăng ký',
                                 style: TextStyle(color: ColorPalette.primary1))
                           ])),

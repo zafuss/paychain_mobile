@@ -3,15 +3,32 @@ import 'package:flutter/services.dart';
 import 'package:paychain_mobile/config/color_const.dart';
 import 'package:paychain_mobile/config/demension_const.dart';
 
+import '../../helpers/shared_preferences_service.dart'; // Import SharedPreferencesService
+
 class InfoScreen extends StatelessWidget {
   const InfoScreen({super.key});
 
+  // Hàm lấy dữ liệu từ SharedPreferences
+  Future<Map<String, String?>> _loadUserData() async {
+    final prefsService = SharedPreferencesService();
+
+    // Lấy dữ liệu từ SharedPreferences
+    String? email =
+        await prefsService.getString(SharedPreferencesService.EMAIL);
+    String? phoneNumber =
+        await prefsService.getString(SharedPreferencesService.PHONE_NUMBER);
+    String? name = await prefsService.getString(SharedPreferencesService.NAME);
+
+    // Trả về dữ liệu dưới dạng Map
+    return {
+      'email': email,
+      'phone': phoneNumber,
+      'name': name,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    //   statusBarColor: ColorPalette.primary1, // Màu nền của status bar
-    //   statusBarIconBrightness: Brightness.light,
-    // ));
     return Scaffold(
       body: Stack(
         children: [
@@ -48,45 +65,62 @@ class InfoScreen extends StatelessWidget {
                       topRight: Radius.circular(20),
                     ),
                   ),
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(kDefaultPadding),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 35,
-                                child: Image.asset(
-                                    'assets/images/fingerprint.png'),
-                              ),
-                              const SizedBox(
-                                width: kMinPadding,
-                              ),
-                              Expanded(
-                                child: Text('zafus2103@gmail.com',
-                                    style: AppTextStyles.title2.copyWith(
-                                        color: ColorPalette.primary1)),
-                              ),
-                            ],
+                  child: FutureBuilder<Map<String, String?>>(
+                    future: _loadUserData(), // Lấy dữ liệu từ SharedPreferences
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                            child: CircularProgressIndicator()); // Chờ dữ liệu
+                      } else if (snapshot.hasError) {
+                        return Center(
+                            child:
+                                Text('Error: ${snapshot.error}')); // Nếu có lỗi
+                      } else if (!snapshot.hasData || snapshot.data == null) {
+                        return const Center(
+                            child:
+                                Text('No data found')); // Nếu không có dữ liệu
+                      } else {
+                        var data = snapshot.data!; // Dữ liệu đã được tải
+                        return SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(kDefaultPadding),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 35,
+                                      child: Image.asset(
+                                          'assets/images/fingerprint.png'),
+                                    ),
+                                    const SizedBox(width: kMinPadding),
+                                    Expanded(
+                                      child: Text(
+                                          data['email'] ?? 'Email chưa có',
+                                          style: AppTextStyles.title2.copyWith(
+                                              color: ColorPalette.primary1)),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: kMinPadding),
+                                _buildInfoRow('Tên hiển thị',
+                                    data['name'] ?? 'Chưa có tên'),
+                                _buildInfoRow('Số điện thoại',
+                                    data['phone'] ?? 'Chưa có số điện thoại'),
+                                const SizedBox(height: 24),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    // Xử lý sự kiện nút bấm
+                                  },
+                                  child: const Text('Đổi mật khẩu'),
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(
-                            height: kMinPadding,
-                          ),
-                          _buildInfoRow('Tên hiển thị', 'Tên'),
-                          _buildInfoRow('Số điện thoại', '0823216213'),
-                          // _buildInfoRow('Tên hiển thị', 'Tên'),
-                          const SizedBox(height: 24),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Xử lý sự kiện nút bấm
-                            },
-                            child: const Text('Đổi mật khẩu'),
-                          ),
-                        ],
-                      ),
-                    ),
+                        );
+                      }
+                    },
                   ),
                 ),
               ),

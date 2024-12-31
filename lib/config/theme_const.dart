@@ -34,10 +34,24 @@ class AppTheme {
         labelSmall: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w600, // SemiBold
+          color: Colors.black54,
           fontFamily: 'Poppins',
-        ), // Thay thế cho caption
+        ),
+        labelLarge: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500, // Medium
+          color: Colors.black54,
+          fontFamily: 'Poppins',
+        ),
+        labelMedium: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w500, // Medium
+          color: Colors.black54,
+          fontFamily: 'Poppins',
+        ),
       ),
       colorSchemeSeed: ColorPalette.primary1,
+      scaffoldBackgroundColor: Colors.white,
       // textTheme: const TextTheme(bodyMedium: TextStyle(fontSize: 16)),
       // colorScheme: ThemeData().colorScheme.copyWith(primary: Colors.black),
       textButtonTheme: TextButtonThemeData(
