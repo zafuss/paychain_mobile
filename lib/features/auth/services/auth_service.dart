@@ -1,12 +1,21 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:paychain_mobile/config/dio_config.dart';
 import 'package:paychain_mobile/models/base_response.dart';
 import 'package:paychain_mobile/models/user.dart';
 
 class AuthService {
+  String hashPassword(String password) {
+    var bytes = utf8.encode(password); // Chuyển mật khẩu thành bytes
+    var digest = sha256.convert(bytes); // Mã hóa mật khẩu bằng SHA-256
+    return digest.toString(); // Trả về chuỗi hex của mã băm
+  }
+
   Future<BaseResponse> registerUser(String email, String password) async {
     try {
-      var user = User(email: email, password: password);
+      var user = User(email: email, password: hashPassword(password));
       var url = '/auth/register';
       var response = await defaultDio.post(
         url,
@@ -24,9 +33,10 @@ class AuthService {
   Future<BaseResponse> verifyEmail(
       String verificationCode, String email) async {
     try {
-      var url = 'auth/verify?verificationCode=$verificationCode&email=$email';
+      var url = 'auth/verify';
       var response = await defaultDio.post(
         url,
+        data: {'verificationCode': verificationCode, 'email': email},
       );
       return Success(response.data);
     } on DioException catch (e) {
@@ -38,9 +48,10 @@ class AuthService {
 
   Future<BaseResponse> loginUser(String email, String password) async {
     try {
-      var url = 'auth/login?email=$email&password=$password';
+      var url = 'auth/login';
       var response = await defaultDio.post(
         url,
+        data: {'email': email, 'password': hashPassword(password)},
       );
       return Success(response.data);
     } on DioException catch (e) {
