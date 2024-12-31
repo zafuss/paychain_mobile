@@ -1,113 +1,65 @@
-import 'dart:io';
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:paychain_mobile/entities/user.dart';
-import 'package:crypto/crypto.dart';
+import 'package:paychain_mobile/features/auth/services/auth_service.dart';
 
-
-String hashPassword(String password) {
-  var bytes = utf8.encode(password);  // Chuyển mật khẩu thành bytes
-  var digest = sha256.convert(bytes);  // Mã hóa mật khẩu bằng SHA-256
-  return digest.toString();  // Trả về chuỗi hex của mã băm
-}
+import '../../../models/base_response.dart';
 
 class AuthController extends GetxController {
   var isLoading = false.obs;
-
+  final AuthService _authService = AuthService();
   Future<void> registerUser(String email, String password) async {
     isLoading.value = true;
-    password = await hashPassword(password);
-    // Khởi tạo đối tượng User
-    var user = User(email: email, password: password);
-
-    // Khởi tạo Dio
-    var dio = Dio();
-
-    // URL API
-    var url = 'http://10.0.2.2:8080/auth/register';
-
-    try {
-      // Gửi yêu cầu POST với dữ liệu người dùng
-      var response = await dio.post(
-        url,
-        data: user.toJson(), // Chuyển đối tượng User thành JSON
-      );
-
-      // Kiểm tra kết quả trả về
-      if (response.statusCode == 200) {
-        print('User registered successfully: ${response.data}');
-        print('Enter your email verify: ');
-      } else {
-        print('Failed to register user: ${response.data}');
-      }
-    } on DioException catch (e) {
-      print('Error occurred: ${e.message}');
-    } finally {
-      isLoading.value = false;
+    final result = await _authService.registerUser(email, password);
+    switch (result) {
+      case Success():
+        isLoading.value = false;
+        Get.snackbar('Thông báo', 'Đăng ký tài khoản thành công!');
+        break;
+      case Failure():
+        isLoading.value = false;
+        Get.snackbar('Lỗi đăng ký tài khoản', result.message);
+        break;
+      default:
+        isLoading.value = false;
+        Get.snackbar('Lỗi đăng ký tài khoản', 'Lỗi không xác định');
+        break;
     }
   }
 
   Future<void> verifyEmail(String verificationCode, String email) async {
-    var dio = Dio();
-
-    // URL API
-    var url = 'http://10.0.2.2:8080/auth/verify';
-
-    try {
-      // Gửi yêu cầu POST với dữ liệu JSON
-      var response = await dio.post(
-        url,
-        data: {
-          'verificationCode': verificationCode, // Chuyển key thành chuỗi
-          'email': email,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        print('Email verification successful!');
-      } else {
-        print('Email verification failed: ${response.data}');
-      }
-    } on DioException catch (e) {
-      if (e.response != null) {
-        // Lỗi từ phía server
-        print('Server error: ${e.response?.data}');
-      } else {
-        // Lỗi khi gửi request
-        print('Request error: ${e.message}');
-      }
-    } catch (e) {
-      // Lỗi không xác định
-      print('Unexpected error: $e');
+    isLoading.value = true;
+    final result = await _authService.verifyEmail(verificationCode, email);
+    switch (result) {
+      case Success():
+        isLoading.value = false;
+        Get.snackbar('Thông báo', 'Xác thực email thành công!');
+        break;
+      case Failure():
+        isLoading.value = false;
+        Get.snackbar('Lỗi xác thực email', result.message);
+        break;
+      default:
+        isLoading.value = false;
+        Get.snackbar('Lỗi xác thực email', 'Lỗi không xác định');
+        break;
     }
   }
 
   Future<void> loginUser(String email, String password) async {
-    var dio = Dio();
-    password = await hashPassword(password);
-    print(password);
-    var user = User(email: email, password: password);
-
-    var url = 'http://10.0.2.2:8080/auth/login';
-
-    try {
-      var response = await dio.post(
-        url,
-        data: {
-          'email': email,
-          'password': password,
-        }, // Dữ liệu người dùng
-      );
-
-      if (response.statusCode == 200) {
-        print('Login successful');
-      } else {
-        print('Login failed: ${response.data}');
-      }
-    } catch (e) {
-      print('Error occurred during login: $e');
+    isLoading.value = true;
+    final result = await _authService.loginUser(email, password);
+    switch (result) {
+      case Success():
+        isLoading.value = false;
+        Get.snackbar('Thông báo', 'Đăng nhập thành công!');
+        break;
+      case Failure():
+        isLoading.value = false;
+        Get.snackbar('Lỗi đăng nhập', result.message);
+        break;
+      default:
+        isLoading.value = false;
+        Get.snackbar('Lỗi đăng nhập', 'Lỗi không xác định');
+        break;
     }
   }
 }

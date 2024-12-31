@@ -25,49 +25,49 @@ class ColorPalette {
 }
 
 class AppTextStyles {
-  static TextStyle? title1 = TextStyle(
+  static TextStyle? title1 = const TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.w600, // SemiBold
     fontFamily: 'Poppins',
   );
 
-  static TextStyle title2 = TextStyle(
+  static TextStyle title2 = const TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.w600, // SemiBold
     fontFamily: 'Poppins',
   );
 
-  static TextStyle title3 = TextStyle(
+  static TextStyle title3 = const TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w600, // SemiBold
     fontFamily: 'Poppins',
   );
 
-  static TextStyle body1 = TextStyle(
+  static TextStyle body1 = const TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w500, // Medium
     fontFamily: 'Poppins',
   );
 
-  static TextStyle body2 = TextStyle(
+  static TextStyle body2 = const TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400, // Regular
     fontFamily: 'Poppins',
   );
 
-  static TextStyle body3 = TextStyle(
+  static TextStyle body3 = const TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500, // Medium
     fontFamily: 'Poppins',
   );
 
-  static TextStyle caption1 = TextStyle(
+  static TextStyle caption1 = const TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w600, // SemiBold
     fontFamily: 'Poppins',
   );
 
-  static TextStyle caption2 = TextStyle(
+  static TextStyle caption2 = const TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500, // Medium
     fontFamily: 'Poppins',
