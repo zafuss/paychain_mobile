@@ -1,4 +1,4 @@
-// import 'package:dio/dio.dart';
+import 'package:dio/dio.dart';
 // import 'package:get/get.dart';
 // import 'package:mathquiz_mobile/config/routes.dart';
 // import 'package:mathquiz_mobile/features/auth/data/local_data_controller.dart';
@@ -6,11 +6,11 @@
 
 // const imgurId = '4dd726d22f92a0a';
 
-// final dio = Dio(
-//   BaseOptions(
-//     baseUrl: 'http://onluyentoan.online/api/',
-//   ),
-// );
+final defaultDio = Dio(
+  BaseOptions(
+    baseUrl: 'http://localhost:8080/',
+  ),
+);
 
 // class DioClient {
 //   final Dio _dio = Dio(
