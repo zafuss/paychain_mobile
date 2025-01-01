@@ -8,7 +8,7 @@ import 'package:dio/dio.dart';
 
 final defaultDio = Dio(
   BaseOptions(
-    baseUrl: 'http://localhost:8080/',
+    baseUrl: 'http://192.168.1.172:8080/',
   ),
 );
 

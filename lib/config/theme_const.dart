@@ -81,6 +81,27 @@ class AppTheme {
           ),
         ),
       ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: ButtonStyle(
+          textStyle: WidgetStateProperty.all<TextStyle>(
+            const TextStyle(color: ColorPalette.primary1, fontSize: 16),
+          ),
+          backgroundColor: WidgetStateProperty.all<Color>(
+            Colors.white,
+          ),
+          minimumSize:
+              WidgetStateProperty.all<Size>(const Size(double.infinity, 53.0)),
+          foregroundColor: WidgetStateProperty.all<Color>(
+            ColorPalette.primary1,
+          ),
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(15.0), // Đặt borderRadius mặc định
+            ),
+          ),
+        ),
+      ),
       // inputDecorationTheme: const InputDecorationTheme(
       //   focusedBorder:
       // ),

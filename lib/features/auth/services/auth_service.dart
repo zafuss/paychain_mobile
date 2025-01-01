@@ -26,7 +26,7 @@ class AuthService {
     } on DioException catch (e) {
       return Failure(
           message: e.message ?? "Có lỗi xảy ra",
-          statusCode: e.response!.statusCode ?? 500);
+          statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
 
@@ -42,7 +42,7 @@ class AuthService {
     } on DioException catch (e) {
       return Failure(
           message: e.message ?? "Có lỗi xảy ra",
-          statusCode: e.response!.statusCode ?? 500);
+          statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
 
@@ -57,7 +57,7 @@ class AuthService {
     } on DioException catch (e) {
       return Failure(
           message: e.message ?? "Có lỗi xảy ra",
-          statusCode: e.response!.statusCode ?? 500);
+          statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
 }

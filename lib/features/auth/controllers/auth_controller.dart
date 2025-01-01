@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:paychain_mobile/config/routes.dart';
 import 'package:paychain_mobile/features/auth/services/auth_service.dart';
 import 'package:paychain_mobile/helpers/helpers.dart';
@@ -14,14 +15,67 @@ class AuthController extends GetxController {
   final confirmPasswordController = TextEditingController();
   final otpController = TextEditingController();
   RxInt remainingTime = 60.obs;
+  RxBool canCheckBiometrics = false.obs;
   final AuthService _authService = AuthService();
   final _sharedPreferencesService = SharedPreferencesService();
+  LocalAuthentication localAuth = LocalAuthentication();
+  // var supportedBiometric = ''.obs;
 
   void resetText() {
     emailController.clear();
     passwordController.clear();
     confirmPasswordController.clear();
     otpController.clear();
+  }
+
+  @override
+  onInit() {
+    super.onInit();
+    checkBiometrics();
+    // detectBiometricType();
+  }
+
+  // Future<void> detectBiometricType() async {
+  //   try {
+  //     // Lấy danh sách các phương thức sinh trắc học mà thiết bị hỗ trợ
+  //     List<BiometricType> availableBiometrics =
+  //         await localAuth.getAvailableBiometrics();
+
+  //     // Xác định loại sinh trắc học
+  //     if (availableBiometrics.contains(BiometricType.face)) {
+  //       supportedBiometric.value = "Face ID";
+  //     } else if (availableBiometrics.contains(BiometricType.fingerprint)) {
+  //       supportedBiometric.value = "Fingerprint";
+  //     } else {
+  //       supportedBiometric.value = "None";
+  //     }
+  //   } catch (e) {
+  //     supportedBiometric.value = "Error: ${e.toString()}";
+  //   }
+  // }
+
+  Future<void> authenticate() async {
+    try {
+      bool isAuthenticated = await localAuth.authenticate(
+        localizedReason: 'Vui lòng xác thực để đăng nhập',
+        options: const AuthenticationOptions(
+          biometricOnly: true,
+          stickyAuth: true,
+        ),
+      );
+
+      if (isAuthenticated) {
+        await loginUserByBiometric();
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> checkBiometrics() async {
+    // Kiểm tra nếu thiết bị hỗ trợ sinh trắc học
+    bool isSupported = await localAuth.isDeviceSupported();
+    canCheckBiometrics.value = isSupported;
   }
 
   Future<void> registerUser() async {
@@ -101,6 +155,29 @@ class AuthController extends GetxController {
         Get.offAndToNamed(Routes.infoScreen);
         await _sharedPreferencesService.saveString(
             SharedPreferencesService.EMAIL, emailController.text);
+        Get.delete<AuthController>(force: true);
+        break;
+      case Failure():
+        isLoading.value = false;
+        Get.snackbar('Lỗi đăng nhập', result.message);
+        break;
+      default:
+        isLoading.value = false;
+        Get.snackbar('Lỗi đăng nhập', 'Lỗi không xác định');
+        break;
+    }
+  }
+
+  Future<void> loginUserByBiometric() async {
+    isLoading.value = true;
+    final result =
+        await _authService.loginUser('zafus2103@gmail.com', 'Phu12382@');
+    switch (result) {
+      case Success():
+        isLoading.value = false;
+        Get.offAndToNamed(Routes.infoScreen);
+        await _sharedPreferencesService.saveString(
+            SharedPreferencesService.EMAIL, 'zafus2103@gmail.com');
         Get.delete<AuthController>(force: true);
         break;
       case Failure():
