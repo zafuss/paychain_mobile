@@ -7,6 +7,7 @@ class Routes {
   static String registerScreen = '/register';
   static String infoScreen = '/info';
   static String otpScreen = '/otpScreen';
+  static String forgotPasswordScreen = '/forgotPasswordScreen';
 }
 
 final getPages = [
@@ -14,4 +15,7 @@ final getPages = [
   GetPage(name: Routes.registerScreen, page: () => const RegisterScreen()),
   GetPage(name: Routes.infoScreen, page: () => const InfoScreen()),
   GetPage(name: Routes.otpScreen, page: () => const OtpScreen()),
+  GetPage(
+      name: Routes.forgotPasswordScreen,
+      page: () => const ForgotPasswordScreen()),
 ];

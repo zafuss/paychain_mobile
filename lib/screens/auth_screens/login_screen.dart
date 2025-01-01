@@ -17,6 +17,7 @@ class LoginScreen extends StatelessWidget {
     //   statusBarIconBrightness: Brightness.light,
     // ));
     final authController = Get.put(AuthController(), permanent: true);
+    final canCheckBiometrics = authController.canCheckBiometrics;
     return Scaffold(
       body: Stack(
         children: [
@@ -95,7 +96,9 @@ class LoginScreen extends StatelessWidget {
                               child: InkWell(
                                 borderRadius:
                                     BorderRadius.circular(defaultBorderRadius),
-                                onTap: () {},
+                                onTap: () {
+                                  Get.toNamed(Routes.forgotPasswordScreen);
+                                },
                                 child: Text(
                                   'Quên mật khẩu?',
                                   style: AppTextStyles.caption2
@@ -105,19 +108,51 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 24),
-                          Obx(
-                            () => ElevatedButton(
-                              onPressed: () async {
-                                await authController.loginUser();
-                              },
-                              child: authController.isLoading.value
-                                  ? const Center(
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                  : const Text('Đăng nhập'),
-                            ),
+                          Row(
+                            children: [
+                              Obx(
+                                () => Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () async {
+                                      await authController.loginUser();
+                                    },
+                                    child: authController.isLoading.value
+                                        ? const Center(
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : const Text('Đăng nhập'),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: kMinPadding / 2),
+                              Obx(
+                                () => canCheckBiometrics.value
+                                    ? SizedBox(
+                                        width: 53,
+                                        child: OutlinedButton(
+                                          style: OutlinedButton.styleFrom(
+                                            padding: const EdgeInsets.all(5),
+                                          ),
+                                          onPressed: () async {
+                                            await authController.authenticate();
+                                          },
+                                          child: authController.isLoading.value
+                                              ? const Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: Colors.white,
+                                                  ),
+                                                )
+                                              : Image.asset(
+                                                  'assets/images/face_id.png',
+                                                  height: 40),
+                                        ),
+                                      )
+                                    : const SizedBox(),
+                              ),
+                            ],
                           ),
                         ],
                       ),
