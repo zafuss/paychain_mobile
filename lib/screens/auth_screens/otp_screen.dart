@@ -18,6 +18,7 @@ class OtpScreen extends StatelessWidget {
     authController.startCountdown();
     return Scaffold(
       appBar: CustomAppBar(
+        context: context,
         title: 'Xác minh email',
         onBackPressed: () {
           showDialog(

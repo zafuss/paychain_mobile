@@ -14,10 +14,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        getPages: getPages,
-        title: 'Flutter Demo',
-        theme: AppTheme.lightTheme(),
-        initialRoute: Routes.loginScreen);
+      debugShowCheckedModeBanner: false,
+      getPages: getPages,
+      title: 'Flutter Demo',
+      theme: AppTheme.lightTheme(),
+      initialRoute: Routes.loginScreen,
+    );
   }
 }

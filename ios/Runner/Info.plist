@@ -2,12 +2,22 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NFCReaderUsageDescription</key>
+	<string>Your custom description explaining why you need access to NFC</string>
+
+	<!-- For Felica and ISO 7816 cards (if applicable) -->
+	<key>com.apple.developer.nfc.readersession.felica.systemcodes</key>
+	<array>
+		<string>0000000000</string> <!-- Replace with actual system codes if applicable -->
+	</array>
+	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
+	<array>
+		<string>your-select-identifier</string> <!-- Replace with actual identifiers -->
+	</array>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Ứng dụng cần sử dụng Face ID để đăng nhập.</string>
 	<key>NSBiometricUsageDescription</key>
 	<string>Ứng dụng cần xác thực sinh trắc học để bảo mật.</string>
-	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleLightContent</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

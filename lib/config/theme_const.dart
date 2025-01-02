@@ -81,6 +81,7 @@ class AppTheme {
           ),
         ),
       ),
+
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
           textStyle: WidgetStateProperty.all<TextStyle>(
@@ -102,9 +103,6 @@ class AppTheme {
           ),
         ),
       ),
-      // inputDecorationTheme: const InputDecorationTheme(
-      //   focusedBorder:
-      // ),
 
       buttonTheme: ButtonThemeData(
         height: 53,

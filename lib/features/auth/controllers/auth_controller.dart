@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:paychain_mobile/config/routes.dart';
+import 'package:paychain_mobile/features/auth/dtos/login_success_dto.dart';
 import 'package:paychain_mobile/features/auth/services/auth_service.dart';
 import 'package:paychain_mobile/helpers/helpers.dart';
 
@@ -10,6 +11,8 @@ import '../../../models/base_response.dart';
 
 class AuthController extends GetxController {
   var isLoading = false.obs;
+  var isLoggedIn = false.obs;
+  var currentEmail = ''.obs;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -29,9 +32,18 @@ class AuthController extends GetxController {
   }
 
   @override
-  onInit() {
+  onInit() async {
     super.onInit();
     checkBiometrics();
+    isLoggedIn.value = await _sharedPreferencesService
+            .getBool(SharedPreferencesService.IS_LOGGED_IN) ??
+        false;
+    currentEmail.value = await _sharedPreferencesService
+            .getString(SharedPreferencesService.EMAIL) ??
+        '';
+    if (isLoggedIn.value) {
+      await authenticate();
+    }
     // detectBiometricType();
   }
 
@@ -148,13 +160,13 @@ class AuthController extends GetxController {
   Future<void> loginUser() async {
     isLoading.value = true;
     final result = await _authService.loginUser(
-        emailController.text, passwordController.text);
+        isLoggedIn.value ? currentEmail.value : emailController.text,
+        passwordController.text);
     switch (result) {
       case Success():
         isLoading.value = false;
-        Get.offAndToNamed(Routes.infoScreen);
-        await _sharedPreferencesService.saveString(
-            SharedPreferencesService.EMAIL, emailController.text);
+        Get.offAndToNamed(Routes.mainWrapper);
+        await _saveAllUserData(result);
         Get.delete<AuthController>(force: true);
         break;
       case Failure():
@@ -168,6 +180,21 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<void> _saveAllUserData(Success<LoginSuccessDto> result) async {
+    await _sharedPreferencesService.saveString(
+        SharedPreferencesService.EMAIL, result.data!.email);
+    await _sharedPreferencesService.saveString(
+        SharedPreferencesService.ID, result.data!.id);
+    await _sharedPreferencesService.saveString(
+        SharedPreferencesService.PHONE_NUMBER, result.data!.phoneNumber);
+    await _sharedPreferencesService.saveString(
+        SharedPreferencesService.ACCESS_TOKEN, result.data!.accessToken);
+    await _sharedPreferencesService.saveString(
+        SharedPreferencesService.REFRESH_TOKEN, result.data!.refreshToken);
+    await _sharedPreferencesService.saveBool(
+        SharedPreferencesService.IS_LOGGED_IN, true);
+  }
+
   Future<void> loginUserByBiometric() async {
     isLoading.value = true;
     final result =
@@ -175,9 +202,8 @@ class AuthController extends GetxController {
     switch (result) {
       case Success():
         isLoading.value = false;
-        Get.offAndToNamed(Routes.infoScreen);
-        await _sharedPreferencesService.saveString(
-            SharedPreferencesService.EMAIL, 'zafus2103@gmail.com');
+        await _saveAllUserData(result);
+        Get.offAndToNamed(Routes.mainWrapper);
         Get.delete<AuthController>(force: true);
         break;
       case Failure():

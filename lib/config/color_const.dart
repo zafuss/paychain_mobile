@@ -62,10 +62,10 @@ class AppTextStyles {
   );
 
   static TextStyle caption1 = const TextStyle(
-    fontSize: 12,
-    fontWeight: FontWeight.w600, // SemiBold
-    fontFamily: 'Poppins',
-  );
+      fontSize: 12,
+      fontWeight: FontWeight.w600, // SemiBold
+      fontFamily: 'Poppins',
+      color: Colors.black54);
 
   static TextStyle caption2 = const TextStyle(
     fontSize: 14,

@@ -13,88 +13,100 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(Theme.of(context).brightness);
+    // Đặt chế độ light status bar
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.white,
+      statusBarIconBrightness: Brightness.dark,
+    ));
     final authController = Get.find<AuthController>();
     authController.startCountdown();
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Xác minh email',
-        onBackPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: const Text('Thoát'),
-                content: const Text(
-                    'Bạn có chắc chắn muốn thoát không? Tài khoản của bạn sẽ không được tạo.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Không'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                      authController.resetText();
-                      authController.resetCountdown();
-                    },
-                    child: const Text('Có'),
-                  ),
-                ],
-              );
-            },
-          );
-        },
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-        child: Container(
-          decoration: Theme.of(context).defaultBoxDecoration,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: kDefaultPadding, vertical: kDefaultPadding),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Nhập email của bạn',
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
-                const SizedBox(height: kMinPadding),
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: TextField(
-                        controller: authController.otpController,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          hintText: 'Email',
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
+    return AnnotatedRegion(
+      value: SystemUiOverlayStyle.dark,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: CustomAppBar(
+          context: context,
+          title: 'Xác minh email',
+          onBackPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text('Thoát'),
+                  content: const Text(
+                      'Bạn có chắc chắn muốn thoát không? Tài khoản của bạn sẽ không được tạo.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Không'),
                     ),
-                    const SizedBox(width: kMinPadding),
-                    Obx(
-                      () => ElevatedButton(
-                        onPressed: () async {
-                          await authController.verifyEmail();
-                        },
-                        child: authController.isLoading.value
-                            ? const Center(
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
-                              )
-                            : const Text('Gửi mã'),
-                      ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                        authController.resetText();
+                        authController.resetCountdown();
+                      },
+                      child: const Text('Có'),
                     ),
                   ],
-                ),
-              ],
+                );
+              },
+            );
+          },
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+          child: Container(
+            decoration: Theme.of(context).defaultBoxDecoration,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: kDefaultPadding, vertical: kDefaultPadding),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Nhập email của bạn',
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                  const SizedBox(height: kMinPadding),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: TextField(
+                          controller: authController.otpController,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            hintText: 'Email',
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(width: kMinPadding),
+                      Obx(
+                        () => Expanded(
+                          flex: 2,
+                          child: ElevatedButton(
+                            onPressed: () async {},
+                            child: authController.isLoading.value
+                                ? const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : const Text('Gửi mã'),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

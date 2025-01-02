@@ -2,8 +2,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesService {
   // Các hằng số static cho key
+  static const String ID = 'id';
   static const String EMAIL = 'email';
   static const String PHONE_NUMBER = 'phone_number';
+  static const String ACCESS_TOKEN = 'access_token';
+  static const String REFRESH_TOKEN = 'refresh_token';
   static const String NAME = 'name';
   static const String IS_LOGGED_IN = 'is_logged_in';
   static const String REMAINING_TIME = 'remaining_time';

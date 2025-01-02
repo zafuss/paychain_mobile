@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:paychain_mobile/config/dio_config.dart';
+import 'package:paychain_mobile/features/auth/dtos/login_success_dto.dart';
 import 'package:paychain_mobile/models/base_response.dart';
 import 'package:paychain_mobile/models/user.dart';
 
@@ -46,14 +47,16 @@ class AuthService {
     }
   }
 
-  Future<BaseResponse> loginUser(String email, String password) async {
+  Future<BaseResponse<LoginSuccessDto>> loginUser(
+      String email, String password) async {
     try {
       var url = 'auth/login';
       var response = await defaultDio.post(
         url,
         data: {'email': email, 'password': hashPassword(password)},
       );
-      return Success(response.data);
+      print(response.data);
+      return Success(LoginSuccessDto.fromJson(response.data));
     } on DioException catch (e) {
       return Failure(
           message: e.message ?? "Có lỗi xảy ra",
