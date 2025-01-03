@@ -19,7 +19,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       value: SystemUiOverlayStyle.dark,
       child: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white.withOpacity(0.0000000000000001),
         elevation: 0, // No shadow
         title: Row(
           children: [

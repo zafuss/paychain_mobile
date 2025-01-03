@@ -242,6 +242,8 @@ class HomeScreen extends StatelessWidget {
                                       CustomGridItem(
                                           title: 'Chuyển tiền',
                                           index: 2,
+                                          onPressed: () => Get.toNamed(
+                                              Routes.transferScreen),
                                           imageUrl:
                                               'assets/images/transfer_icon.png'),
                                       CustomGridItem(
@@ -302,15 +304,22 @@ class CustomGridItem extends StatelessWidget {
   final int index;
   final String title;
   final String imageUrl;
+  final Function()? onPressed;
   CustomGridItem(
-      {required this.index, required this.title, required this.imageUrl});
+      {required this.index,
+      required this.title,
+      required this.imageUrl,
+      this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Xử lý sự kiện tap ở đây
-        print('Item $index tapped');
+        if (onPressed != null) {
+          onPressed!();
+        } else {
+          print('Item $index tapped');
+        }
       },
       child: Container(
         decoration: BoxDecoration(

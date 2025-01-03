@@ -167,7 +167,7 @@ class AuthController extends GetxController {
         isLoading.value = false;
         Get.offAndToNamed(Routes.mainWrapper);
         await _saveAllUserData(result);
-        Get.delete<AuthController>(force: true);
+        // Get.delete<AuthController>(force: true);
         break;
       case Failure():
         isLoading.value = false;
@@ -204,7 +204,7 @@ class AuthController extends GetxController {
         isLoading.value = false;
         await _saveAllUserData(result);
         Get.offAndToNamed(Routes.mainWrapper);
-        Get.delete<AuthController>(force: true);
+        // Get.delete<AuthController>(force: true);
         break;
       case Failure():
         isLoading.value = false;
