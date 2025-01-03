@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:paychain_mobile/config/demension_const.dart';
-import 'package:paychain_mobile/extensions/ext_box_decoration.dart';
-import 'package:paychain_mobile/widgets/widgets.dart';
+import 'package:paychain_mobile/utils/constants/demension_const.dart';
+import 'package:paychain_mobile/utils/extensions/ext_box_decoration.dart';
+import 'package:paychain_mobile/shared/widgets/widgets.dart';
 
-import '../../features/auth/controllers/auth_controller.dart';
+import '../controllers/auth_controller.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});

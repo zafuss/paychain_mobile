@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:paychain_mobile/config/color_const.dart';
-import 'package:paychain_mobile/config/demension_const.dart';
+import 'package:paychain_mobile/utils/constants/color_const.dart';
+import 'package:paychain_mobile/utils/constants/demension_const.dart';
 
-import '../../helpers/shared_preferences_service.dart'; // Import SharedPreferencesService
+import '../../../utils/helpers/shared_preferences_service.dart'; // Import SharedPreferencesService
 
 class InfoScreen extends StatelessWidget {
   const InfoScreen({super.key});

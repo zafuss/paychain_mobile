@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:paychain_mobile/config/color_const.dart';
-import 'package:paychain_mobile/config/demension_const.dart';
-import 'package:paychain_mobile/config/routes.dart';
-import 'package:paychain_mobile/features/auth/controllers/auth_controller.dart';
+import 'package:paychain_mobile/utils/constants/color_const.dart';
+import 'package:paychain_mobile/utils/constants/demension_const.dart';
+import 'package:paychain_mobile/routes/routes.dart';
+import 'package:paychain_mobile/modules/auth/controllers/auth_controller.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});

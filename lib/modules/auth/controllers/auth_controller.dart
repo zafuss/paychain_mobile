@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:paychain_mobile/config/routes.dart';
-import 'package:paychain_mobile/features/auth/dtos/login_success_dto.dart';
-import 'package:paychain_mobile/features/auth/services/auth_service.dart';
-import 'package:paychain_mobile/helpers/helpers.dart';
+import 'package:paychain_mobile/routes/routes.dart';
+import 'package:paychain_mobile/modules/auth/dtos/login_success_dto.dart';
+import 'package:paychain_mobile/modules/auth/services/auth_service.dart';
+import 'package:paychain_mobile/utils/helpers/helpers.dart';
 
-import '../../../models/base_response.dart';
+import '../../../data/models/base_response.dart';
 
 class AuthController extends GetxController {
   var isLoading = false.obs;

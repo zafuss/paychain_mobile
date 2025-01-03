@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:paychain_mobile/config/color_const.dart';
-import 'package:paychain_mobile/config/demension_const.dart';
-import 'package:paychain_mobile/config/routes.dart';
-import 'package:paychain_mobile/features/home/controllers/home_controller.dart';
+import 'package:paychain_mobile/utils/constants/color_const.dart';
+import 'package:paychain_mobile/utils/constants/demension_const.dart';
+import 'package:paychain_mobile/routes/routes.dart';
+import 'package:paychain_mobile/modules/home/controllers/home_controller.dart';
 
-import '../../helpers/shared_preferences_service.dart'; // Import SharedPreferencesService
+import '../../../utils/helpers/shared_preferences_service.dart'; // Import SharedPreferencesService
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

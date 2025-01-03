@@ -1,14 +1,18 @@
+import 'wallet.dart';
+
 class User {
   String? name;
   String email;
   String? phoneNumber;
   String password;
+  List<Wallet>? wallets;
 
   User({
     this.name,
     required this.email,
     this.phoneNumber,
     required this.password,
+    this.wallets,
   });
 
   // Phương thức chuyển đổi từ Map thành đối tượng User
@@ -18,6 +22,9 @@ class User {
       email: json['email'],
       phoneNumber: json['phoneNumber'],
       password: json['password'],
+      wallets: json['wallets'] != null
+          ? List<Wallet>.from(json['wallets'].map((x) => Wallet.fromJson(x)))
+          : null,
     );
   }
 

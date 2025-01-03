@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/instance_manager.dart';
-import 'package:paychain_mobile/config/color_const.dart';
+import 'package:paychain_mobile/utils/constants/color_const.dart';
 import 'package:paychain_mobile/screens/screens.dart';
 
-import '../features/home/controllers/main_wrapper_controller.dart';
+import '../modules/home/controllers/main_wrapper_controller.dart';
 
 class MainWrapper extends StatefulWidget {
   const MainWrapper({super.key});

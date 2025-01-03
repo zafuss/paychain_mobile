@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
-import 'package:paychain_mobile/config/dio_config.dart';
-import 'package:paychain_mobile/features/auth/dtos/login_success_dto.dart';
-import 'package:paychain_mobile/models/base_response.dart';
-import 'package:paychain_mobile/models/user.dart';
+import 'package:paychain_mobile/utils/configs/dio_config.dart';
+import 'package:paychain_mobile/data/models/user.dart';
+import 'package:paychain_mobile/modules/auth/dtos/login_success_dto.dart';
+
+import '../../../data/models/base_response.dart';
 
 class AuthService {
   String hashPassword(String password) {

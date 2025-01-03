@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:paychain_mobile/config/color_const.dart';
-import 'package:paychain_mobile/config/demension_const.dart';
-import 'package:paychain_mobile/features/auth/controllers/auth_controller.dart';
+import 'package:paychain_mobile/utils/constants/color_const.dart';
+import 'package:paychain_mobile/utils/constants/demension_const.dart';
+import 'package:paychain_mobile/modules/auth/controllers/auth_controller.dart';
 
-import '../../config/routes.dart';
+import '../../../routes/routes.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

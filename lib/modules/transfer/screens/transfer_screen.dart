@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:paychain_mobile/config/color_const.dart';
-import 'package:paychain_mobile/config/demension_const.dart';
-import 'package:paychain_mobile/extensions/ext_box_decoration.dart';
-import 'package:paychain_mobile/features/transfer/controllers/transfer_controller.dart';
+import 'package:paychain_mobile/utils/constants/color_const.dart';
+import 'package:paychain_mobile/utils/constants/demension_const.dart';
+import 'package:paychain_mobile/utils/extensions/ext_box_decoration.dart';
+import 'package:paychain_mobile/modules/transfer/controllers/transfer_controller.dart';
 
-import '../../features/auth/controllers/auth_controller.dart';
-import '../../widgets/custom_appbar.dart';
+import '../../auth/controllers/auth_controller.dart';
+import '../../../shared/widgets/custom_appbar.dart';
 
 class TransferScreen extends StatelessWidget {
   const TransferScreen({super.key});
@@ -54,20 +54,21 @@ class TransferScreen extends StatelessWidget {
                                   contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 15),
                                   enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: ColorPalette.tfBorder,
                                         width: 1.0),
                                     borderRadius: BorderRadius.circular(
                                         defaultBorderRadius),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
+                                    borderSide: const BorderSide(
                                         color: ColorPalette.tfBorder,
                                         width: 1.0),
                                     borderRadius: BorderRadius.circular(
                                         defaultBorderRadius),
                                   ),
-                                  labelStyle: TextStyle(color: Colors.grey),
+                                  labelStyle:
+                                      const TextStyle(color: Colors.grey),
                                 ),
                                 value:
                                     _transferController.selectedCurrency.value,
@@ -88,11 +89,11 @@ class TransferScreen extends StatelessWidget {
                                 },
                                 dropdownColor:
                                     Colors.white, // Màu nền của dropdown menu
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors
                                         .black), // Màu chữ trong dropdown menu
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: kMinPadding / 3,
                               ),
                               Text(

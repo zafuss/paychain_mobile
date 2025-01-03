@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:paychain_mobile/config/demension_const.dart';
+import 'package:paychain_mobile/utils/constants/demension_const.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title; // Title is optional
