@@ -22,7 +22,7 @@ class TransferScreen extends StatelessWidget {
       statusBarColor: Colors.white,
       statusBarIconBrightness: Brightness.dark,
     ));
-    final authController = Get.find<AuthController>();
+    final _authController = Get.find<AuthController>();
     // ignore: no_leading_underscores_for_local_identifiers
     final _transferController = Get.put(TransferController());
     final _walletController = Get.put(WalletController());
@@ -122,17 +122,107 @@ class TransferScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     TextField(
-                                      controller: authController.otpController,
+                                      onChanged: (value) async {
+                                        Future.delayed(Durations.extralong4,
+                                            () async {
+                                          await _transferController
+                                              .getUserByAccount(
+                                                  _transferController
+                                                      .receiveAccountController
+                                                      .text,
+                                                  _walletController
+                                                      .selectedWallet
+                                                      .value!
+                                                      .account);
+                                        });
+                                      },
+                                      onTapOutside: (event) async {
+                                        await _transferController
+                                            .getUserByAccount(
+                                                _transferController
+                                                    .receiveAccountController
+                                                    .text,
+                                                _walletController.selectedWallet
+                                                    .value!.account);
+                                      },
+                                      onEditingComplete: () async {
+                                        await _transferController
+                                            .getUserByAccount(
+                                                _transferController
+                                                    .receiveAccountController
+                                                    .text,
+                                                _walletController.selectedWallet
+                                                    .value!.account);
+                                      },
+                                      controller: _transferController
+                                          .receiveAccountController,
                                       keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
+                                      decoration: InputDecoration(
+                                        focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12.0),
+                                          borderSide: BorderSide(
+                                              color: _transferController
+                                                      .errorString
+                                                      .value
+                                                      .isNotEmpty
+                                                  ? Colors.red
+                                                  : ColorPalette.primary1,
+                                              width: 1),
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: _transferController
+                                                      .errorString
+                                                      .value
+                                                      .isNotEmpty
+                                                  ? Colors.red
+                                                  : ColorPalette.tfBorder,
+                                              width: 1.0),
+                                          borderRadius: BorderRadius.circular(
+                                              defaultBorderRadius),
+                                        ),
+                                        suffixIcon: _transferController
+                                                .isGettingUser.value
+                                            ? const SizedBox(
+                                                width: 50.0,
+                                                height: 50.0,
+                                                child: Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 2.0,
+                                                    color:
+                                                        ColorPalette.primary1,
+                                                  ),
+                                                ),
+                                              )
+                                            : null,
                                         hintText: 'Số tài khoản',
                                       ),
                                       textAlign: TextAlign.left,
                                     ),
+                                    _transferController
+                                            .errorString.value.isNotEmpty
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: kMinPadding / 2),
+                                            child: Text(
+                                              _transferController
+                                                  .errorString.value,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelMedium!
+                                                  .copyWith(
+                                                    color: Colors.red,
+                                                  ),
+                                            ),
+                                          )
+                                        : const SizedBox(),
                                     const SizedBox(height: kMinPadding),
                                     TextField(
                                       enabled: false,
-                                      controller: authController.otpController,
+                                      controller: _transferController
+                                          .receiveNameController,
                                       decoration: const InputDecoration(
                                         hintText: 'Tên người nhận',
                                       ),
@@ -140,7 +230,8 @@ class TransferScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(height: kMinPadding),
                                     TextField(
-                                      controller: authController.otpController,
+                                      controller:
+                                          _transferController.amountController,
                                       keyboardType: TextInputType.number,
                                       decoration: const InputDecoration(
                                         hintText: 'Số tiền',
@@ -150,7 +241,8 @@ class TransferScreen extends StatelessWidget {
                                     const SizedBox(height: kMinPadding),
                                     TextField(
                                       maxLines: 3,
-                                      controller: authController.otpController,
+                                      controller: _transferController
+                                          .transferNoteController,
                                       decoration: const InputDecoration(
                                         hintText: 'Nội dung',
                                       ),
@@ -200,36 +292,280 @@ class TransferScreen extends StatelessWidget {
                                     const SizedBox(height: kMinPadding),
                                     ElevatedButton(
                                       onPressed: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) => AlertDialog(
-                                                  title: const Text(
-                                                      'Xác nhận chuyển tiền'),
-                                                  content: Column(
+                                        showModalBottomSheet(
+                                          backgroundColor: Colors.white,
+                                          context: context,
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                                top: Radius.circular(20.0)),
+                                          ),
+                                          isScrollControlled:
+                                              true, // Cho phép kiểm soát chiều cao
+                                          builder: (context) =>
+                                              FractionallySizedBox(
+                                            heightFactor:
+                                                0.5, // Chiếm 50% chiều cao màn hình
+                                            widthFactor: 1,
+                                            child: Container(
+                                              padding: const EdgeInsets.all(
+                                                  kDefaultPadding),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: [
                                                       const Text(
-                                                          'Thông tin giao dịch: '),
-                                                      Text(
-                                                          'Số tài khoản: ${authController.otpController.text}'),
+                                                        'Xác nhận chuyển tiền',
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      ),
+                                                      InkWell(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(50),
+                                                        onTap: () {
+                                                          Get.back();
+                                                        },
+                                                        child: const Icon(
+                                                          Icons.close,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
                                                     ],
                                                   ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Get.back();
-                                                      },
-                                                      child: const Text('Hủy'),
+                                                  const SizedBox(
+                                                    height: kMinPadding,
+                                                  ),
+                                                  Container(
+                                                    decoration: Theme.of(
+                                                            context)
+                                                        .defaultBoxDecoration,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              kDefaultPadding),
+                                                      child: Center(
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  'Tài khoản chuyển',
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .labelLarge!,
+                                                                ),
+                                                                Text(
+                                                                  _walletController
+                                                                      .selectedWallet
+                                                                      .value!
+                                                                      .account,
+                                                                  style: const TextStyle(
+                                                                      color: ColorPalette
+                                                                          .primary1,
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const SizedBox(
+                                                              height:
+                                                                  kMinPadding,
+                                                            ),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  'Tài khoản nhận',
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .labelLarge!,
+                                                                ),
+                                                                Text(
+                                                                  _transferController
+                                                                      .receiveAccountController
+                                                                      .text,
+                                                                  style: const TextStyle(
+                                                                      color: ColorPalette
+                                                                          .primary1,
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const SizedBox(
+                                                              height:
+                                                                  kMinPadding,
+                                                            ),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  'Tên người nhận',
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .labelLarge!,
+                                                                ),
+                                                                Text(
+                                                                  _transferController
+                                                                      .receiveNameController
+                                                                      .text,
+                                                                  style: const TextStyle(
+                                                                      color: ColorPalette
+                                                                          .primary1,
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const SizedBox(
+                                                              height:
+                                                                  kMinPadding,
+                                                            ),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  'Nội dung',
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .labelLarge!,
+                                                                ),
+                                                                const SizedBox(
+                                                                  width:
+                                                                      kMinPadding,
+                                                                ),
+                                                                Expanded(
+                                                                  child: Text(
+                                                                    textDirection:
+                                                                        TextDirection
+                                                                            .rtl,
+                                                                    _transferController
+                                                                        .transferNoteController
+                                                                        .text,
+                                                                    style: const TextStyle(
+                                                                        color: ColorPalette
+                                                                            .primary1,
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w600),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets
+                                                                  .symmetric(
+                                                                  vertical:
+                                                                      kMinPadding),
+                                                              child: Container(
+                                                                height: 1,
+                                                                color:
+                                                                    ColorPalette
+                                                                        .tfBorder,
+                                                              ),
+                                                            ),
+                                                            Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                const Text(
+                                                                  'Số tiền',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          20,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600),
+                                                                ),
+                                                                Text(
+                                                                  '${_transferController.amountController.text} ${_walletController.selectedWallet.value!.nameNode}',
+                                                                  style: const TextStyle(
+                                                                      color: ColorPalette
+                                                                          .primary1,
+                                                                      fontSize:
+                                                                          20,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ),
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Get.back();
-                                                        // Xử lý chuyển tiền
-                                                      },
-                                                      child: const Text(
-                                                          'Chuyển tiền'),
-                                                    ),
-                                                  ],
-                                                ));
+                                                  ),
+                                                  const SizedBox(
+                                                      height: kMinPadding),
+                                                  ElevatedButton(
+                                                    onPressed: () async {
+                                                      if (_authController
+                                                          .canCheckBiometrics
+                                                          .value) {
+                                                        bool _authResult =
+                                                            await _authController
+                                                                .transferAuthenticate();
+                                                        if (_authResult) {
+                                                          Get.back();
+                                                          await _transferController
+                                                              .sendTransaction(
+                                                                  _walletController
+                                                                      .selectedWallet
+                                                                      .value!
+                                                                      .account);
+                                                        } else {
+                                                          Get.snackbar(
+                                                              'Xác thực thất bại',
+                                                              'Vui lòng thử lại');
+                                                          Get.back();
+                                                        }
+                                                      }
+                                                    },
+                                                    child:
+                                                        const Text('Xác nhận'),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
                                       },
                                       child: const Text('Tiếp tục'),
                                     ),

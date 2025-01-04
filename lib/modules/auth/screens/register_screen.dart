@@ -67,6 +67,14 @@ class RegisterScreen extends StatelessWidget {
                             ),
                           ),
                           TextField(
+                            controller: authController.nameController,
+                            decoration: const InputDecoration(
+                              labelText: 'Tên của bạn',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          TextField(
                             controller: authController.emailController,
                             decoration: const InputDecoration(
                               labelText: 'Email',

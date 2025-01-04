@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:paychain_mobile/data/models/wallet.dart';
+import 'package:paychain_mobile/modules/auth/controllers/auth_controller.dart';
+import 'package:paychain_mobile/modules/localdata/local_data_controller.dart';
 import 'package:paychain_mobile/modules/wallet/controllers/wallet_controller.dart';
 import 'package:paychain_mobile/utils/constants/color_const.dart';
 import 'package:paychain_mobile/utils/constants/demension_const.dart';
@@ -37,7 +39,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final _homeController = Get.put(HomeController());
     final _walletController = Get.put(WalletController());
-
+    final _localDataController = Get.put(LocalDataController());
     return Scaffold(
       body: Stack(
         children: [
@@ -57,12 +59,14 @@ class HomeScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Xin chào',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
+                      Obx(
+                        () => Text(
+                          'Xin chào ${_localDataController.currentName.value}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                       Padding(
@@ -91,6 +95,8 @@ class HomeScreen extends StatelessWidget {
                                                   SharedPreferencesService
                                                       .IS_LOGGED_IN,
                                                   false);
+                                              Get.delete<AuthController>(
+                                                  force: true);
                                               Get.offAndToNamed(
                                                   Routes.loginScreen);
                                             },
@@ -246,8 +252,6 @@ class HomeScreen extends StatelessWidget {
                                           title: 'Chuyển tiền',
                                           index: 2,
                                           onPressed: () {
-                                            _walletController.walletService
-                                                .disconnect();
                                             return Get.toNamed(
                                                 Routes.transferScreen);
                                           },

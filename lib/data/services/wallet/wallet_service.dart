@@ -1,6 +1,13 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
+import 'package:paychain_mobile/data/models/user.dart';
 import 'package:paychain_mobile/data/models/wallet.dart';
+import 'package:paychain_mobile/modules/transfer/dtos/transaction_request.dart';
+import 'package:paychain_mobile/modules/transfer/dtos/wallet_response.dart';
+import 'package:paychain_mobile/utils/configs/dio_config.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
+
+import '../../models/base_response.dart';
 
 class WalletService {
   late StompClient _stompClient;
@@ -55,6 +62,40 @@ class WalletService {
   void disconnect() {
     _stompClient.deactivate();
     print('Disconnected');
+  }
+
+  getUserByAccount(String account) async {
+    try {
+      var url = 'wallet/user';
+      var response = await defaultDio.get(
+        url,
+        queryParameters: {'account': account},
+      );
+      // print(response.data!.wallets);
+      return Success(User.fromJson(response.data));
+    } on DioException catch (e) {
+      return Failure(
+          message: e.message ?? "Có lỗi xảy ra",
+          statusCode: e.response != null ? e.response!.statusCode! : 500);
+    }
+  }
+
+  sendTransaction(TransactionRequest request) async {
+    try {
+      var url = 'wallet/send';
+      var response = await defaultDio.post(
+        url,
+        data: request.toJson(),
+      );
+      // print(response.data!.wallets);
+      return Success(
+        WalletResponse.fromJson(response.data),
+      );
+    } on DioException catch (e) {
+      return Failure(
+          message: e.message ?? "Có lỗi xảy ra",
+          statusCode: e.response != null ? e.response!.statusCode! : 500);
+    }
   }
 
   // Hàm xử lý khi kết nối thành công

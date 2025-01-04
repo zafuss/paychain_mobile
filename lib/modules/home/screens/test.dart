@@ -1,61 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:paychain_mobile/data/models/wallet.dart';
-import 'package:paychain_mobile/modules/wallet/controllers/wallet_controller.dart';
 
-class WalletScreen extends StatelessWidget {
-  final WalletController walletController = Get.put(WalletController());
-
+class BottomSheetExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Wallet Selection')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Dropdown for wallet selection
-            Obx(() {
-              if (walletController.wallets.isEmpty) {
-                return Center(child: Text('No wallets available'));
-              }
-
-              return DropdownButton<Wallet>(
-                isExpanded: true,
-                value: walletController.selectedWallet.value,
-                hint: Text('Select a Wallet'),
-                items: walletController.wallets.map((wallet) {
-                  return DropdownMenuItem<Wallet>(
-                    value: wallet,
-                    child: Text(wallet.account),
-                  );
-                }).toList(),
-                onChanged: (Wallet? wallet) {
-                  if (wallet != null) {
-                    walletController.selectWallet(wallet);
-                  }
-                },
-              );
-            }),
-            SizedBox(height: 16),
-            // Selected Wallet Details
-            Obx(() {
-              final selectedWallet = walletController.selectedWallet.value;
-              if (selectedWallet == null) {
-                return Center(child: Text('No wallet selected'));
-              }
-              return Text(
-                'Selected Wallet: ${selectedWallet.account} (ID: ${selectedWallet.balance})',
-                style: TextStyle(fontSize: 16),
-              );
-            }),
-          ],
+      appBar: AppBar(
+        title: const Text('Bottom Sheet Example'),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+              ),
+              isScrollControlled: true, // Cho phép kiểm soát chiều cao
+              builder: (context) => FractionallySizedBox(
+                heightFactor: 0.5, // Chiếm 50% chiều cao màn hình
+                widthFactor: 1,
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'This is a modal bottom sheet',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context); // Đóng bottom sheet
+                        },
+                        child: const Text('Close'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+          child: const Text('Show Bottom Sheet'),
         ),
       ),
     );
   }
 }
 
-void main() {
-  runApp(GetMaterialApp(home: WalletScreen()));
-}
+void main() => runApp(MaterialApp(home: BottomSheetExample()));

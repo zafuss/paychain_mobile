@@ -7,3 +7,4 @@ export '../modules/home/screens/home_screen.dart';
 export '../modules/auth/screens/setting_screen.dart';
 export 'main_wrapper.dart';
 export '../modules/transfer/screens/transfer_screen.dart';
+export '../modules/transfer/screens/success_transfer_screen.dart';

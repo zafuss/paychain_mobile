@@ -12,6 +12,7 @@ class Routes {
   static String mainWrapper = '/mainWrapper';
   static String settingScreen = '/settingScreen';
   static String transferScreen = '/transferScreen';
+  static String successTransferScreen = '/successTransferScreen';
 }
 
 final getPages = [
@@ -26,4 +27,7 @@ final getPages = [
   GetPage(name: Routes.mainWrapper, page: () => const MainWrapper()),
   GetPage(name: Routes.settingScreen, page: () => const SettingScreen()),
   GetPage(name: Routes.transferScreen, page: () => const TransferScreen()),
+  GetPage(
+      name: Routes.successTransferScreen,
+      page: () => const SuccessTransferScreen()),
 ];

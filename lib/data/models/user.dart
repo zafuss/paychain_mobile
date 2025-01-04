@@ -2,6 +2,7 @@ class User {
   String? name;
   String email;
   String? phoneNumber;
+
   String password;
 
   User({
@@ -17,7 +18,7 @@ class User {
       name: json['name'],
       email: json['email'],
       phoneNumber: json['phoneNumber'],
-      password: json['password'],
+      password: json['password'] ?? "",
     );
   }
 

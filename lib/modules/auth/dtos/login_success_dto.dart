@@ -4,6 +4,7 @@ class LoginSuccessDto {
   final String accessToken;
   final String refreshToken;
   final String id;
+  final String? name;
   final String email;
   final String phoneNumber;
   final bool status;
@@ -15,13 +16,14 @@ class LoginSuccessDto {
       required this.id,
       required this.email,
       required this.phoneNumber,
+      this.name,
       this.wallets,
       this.status = true});
 
   @override
   String toString() {
     // TODO: implement toString
-    return 'accessToken: $accessToken, refreshToken: $refreshToken, id: $id, email: $email, phoneNumber: $phoneNumber, status: $status, wallets: $wallets';
+    return 'accessToken: $accessToken, refreshToken: $refreshToken, id: $id, email: $email, phoneNumber: $phoneNumber, status: $status, name: $name';
   }
 
   factory LoginSuccessDto.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class LoginSuccessDto {
       accessToken: json['accessToken'],
       refreshToken: json['refreshToken'],
       id: json['id'],
+      name: json['name'],
       email: json['email'],
       phoneNumber: json['phoneNumber'] ?? '',
       status: json['status'] ?? true,

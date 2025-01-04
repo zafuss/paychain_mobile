@@ -70,4 +70,14 @@ class SharedPreferencesService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
   }
+
+  void saveAllUserData(String email, String name, String phone,
+      String accessToken, String refreshToken) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(SharedPreferencesService.EMAIL, email);
+    prefs.setString(SharedPreferencesService.NAME, name);
+    prefs.setString(SharedPreferencesService.PHONE_NUMBER, phone);
+    prefs.setString(SharedPreferencesService.ACCESS_TOKEN, accessToken);
+    prefs.setString(SharedPreferencesService.REFRESH_TOKEN, refreshToken);
+  }
 }

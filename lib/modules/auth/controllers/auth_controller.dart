@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:paychain_mobile/modules/auth/dtos/fast_login_request.dart';
 import 'package:paychain_mobile/routes/routes.dart';
-import 'package:paychain_mobile/modules/auth/dtos/login_success_dto.dart';
 import 'package:paychain_mobile/data/services/auth/auth_service.dart';
 import 'package:paychain_mobile/utils/helpers/helpers.dart';
 
@@ -13,6 +13,7 @@ class AuthController extends GetxController {
   var isLoading = false.obs;
   var isLoggedIn = false.obs;
   var currentEmail = ''.obs;
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -84,6 +85,20 @@ class AuthController extends GetxController {
     }
   }
 
+  transferAuthenticate() async {
+    try {
+      return await localAuth.authenticate(
+        localizedReason: 'Vui lòng xác thực để xác nhận giao dịch',
+        options: const AuthenticationOptions(
+          biometricOnly: true,
+          stickyAuth: true,
+        ),
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<void> checkBiometrics() async {
     // Kiểm tra nếu thiết bị hỗ trợ sinh trắc học
     bool isSupported = await localAuth.isDeviceSupported();
@@ -93,7 +108,7 @@ class AuthController extends GetxController {
   Future<void> registerUser() async {
     isLoading.value = true;
     final result = await _authService.registerUser(
-        emailController.text, passwordController.text);
+        nameController.text, emailController.text, passwordController.text);
     switch (result) {
       case Success():
         isLoading.value = false;
@@ -113,7 +128,7 @@ class AuthController extends GetxController {
   Future<void> resendOtp() async {
     isLoading.value = true;
     final result = await _authService.registerUser(
-        emailController.text, passwordController.text);
+        nameController.text, emailController.text, passwordController.text);
     switch (result) {
       case Success():
         isLoading.value = false;
@@ -143,7 +158,7 @@ class AuthController extends GetxController {
         stopCountdown();
         await _sharedPreferencesService.saveString(
             SharedPreferencesService.EMAIL, emailController.text);
-        Get.toNamed(Routes.infoScreen);
+        Get.toNamed(Routes.mainWrapper);
         Get.snackbar('Thông báo', result.data.toString());
         break;
       case Failure():
@@ -165,8 +180,16 @@ class AuthController extends GetxController {
     switch (result) {
       case Success():
         isLoading.value = false;
+        print(result.data);
         Get.offAndToNamed(Routes.mainWrapper);
-        await _saveAllUserData(result);
+        _sharedPreferencesService.saveAllUserData(
+            result.data!.email,
+            result.data!.name ?? "",
+            result.data!.phoneNumber,
+            result.data!.accessToken,
+            result.data!.refreshToken);
+        _sharedPreferencesService.saveBool(
+            SharedPreferencesService.IS_LOGGED_IN, true);
         // Get.delete<AuthController>(force: true);
         break;
       case Failure():
@@ -180,34 +203,46 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> _saveAllUserData(Success<LoginSuccessDto> result) async {
-    await _sharedPreferencesService.saveString(
-        SharedPreferencesService.EMAIL, result.data!.email);
-    await _sharedPreferencesService.saveString(
-        SharedPreferencesService.ID, result.data!.id);
-    await _sharedPreferencesService.saveString(
-        SharedPreferencesService.PHONE_NUMBER, result.data!.phoneNumber);
-    await _sharedPreferencesService.saveString(
-        SharedPreferencesService.ACCESS_TOKEN, result.data!.accessToken);
-    await _sharedPreferencesService.saveString(
-        SharedPreferencesService.REFRESH_TOKEN, result.data!.refreshToken);
-    await _sharedPreferencesService.saveBool(
-        SharedPreferencesService.IS_LOGGED_IN, true);
-  }
-
   Future<void> loginUserByBiometric() async {
     isLoading.value = true;
-    final result =
-        await _authService.loginUser('zafus2103@gmail.com', 'Phu12382@');
+    final accessToken = await _sharedPreferencesService
+        .getString(SharedPreferencesService.ACCESS_TOKEN);
+    final refreshToken = await _sharedPreferencesService
+        .getString(SharedPreferencesService.REFRESH_TOKEN);
+    final email = await _sharedPreferencesService
+        .getString(SharedPreferencesService.EMAIL);
+    if (refreshToken == null || accessToken == null || email == null) {
+      isLoading.value = false;
+      Get.snackbar(
+          'Lỗi đăng nhập', 'Vui lòng đăng nhập bằng cách nhập mật khẩu');
+      return;
+    }
+    final loginRequest = FastLoginRequest(
+        email: email, accessToken: accessToken, refreshToken: refreshToken);
+    final result = await _authService.fastLogin(loginRequest);
     switch (result) {
       case Success():
+        print(result.data);
         isLoading.value = false;
-        await _saveAllUserData(result);
+        _sharedPreferencesService.saveAllUserData(
+            result.data!.email,
+            result.data!.name ?? "",
+            result.data!.phoneNumber,
+            result.data!.accessToken,
+            result.data!.refreshToken);
+        _sharedPreferencesService.saveBool(
+            SharedPreferencesService.IS_LOGGED_IN, true);
         Get.offAndToNamed(Routes.mainWrapper);
         // Get.delete<AuthController>(force: true);
         break;
       case Failure():
         isLoading.value = false;
+        if (result.statusCode == 401) {
+          Get.snackbar('Lỗi đăng nhập', 'Phiên đăng nhập đã hết hạn');
+          Get.offAndToNamed(Routes.loginScreen);
+        } else {
+          Get.snackbar('Lỗi đăng nhập', result.message);
+        }
         Get.snackbar('Lỗi đăng nhập', result.message);
         break;
       default:
