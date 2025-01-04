@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:paychain_mobile/routes/routes.dart';
 import 'package:paychain_mobile/modules/auth/dtos/login_success_dto.dart';
-import 'package:paychain_mobile/modules/auth/services/auth_service.dart';
+import 'package:paychain_mobile/data/services/auth/auth_service.dart';
 import 'package:paychain_mobile/utils/helpers/helpers.dart';
 
 import '../../../data/models/base_response.dart';

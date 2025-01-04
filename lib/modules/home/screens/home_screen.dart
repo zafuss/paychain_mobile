@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:paychain_mobile/data/models/wallet.dart';
+import 'package:paychain_mobile/modules/wallet/controllers/wallet_controller.dart';
 import 'package:paychain_mobile/utils/constants/color_const.dart';
 import 'package:paychain_mobile/utils/constants/demension_const.dart';
 import 'package:paychain_mobile/routes/routes.dart';
@@ -34,6 +36,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _homeController = Get.put(HomeController());
+    final _walletController = Get.put(WalletController());
+
     return Scaffold(
       body: Stack(
         children: [
@@ -182,38 +186,37 @@ class HomeScreen extends StatelessWidget {
                                                             .isHiddenBalance
                                                             .value
                                                         ? '******'
-                                                        : '${_homeController.balance.value}',
+                                                        : '${_walletController.selectedWallet.value?.balance ?? 0}',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .displayLarge,
                                                   ),
                                                   const SizedBox(width: 8),
                                                   // Dropdown để chọn đơn vị tiền
-                                                  DropdownButton<String>(
+                                                  DropdownButton<Wallet>(
                                                     padding: EdgeInsets.zero,
                                                     underline: const SizedBox(),
-                                                    value: _homeController
-                                                        .selectedCurrency.value,
-                                                    items: [
-                                                      'BTC',
-                                                      'ETH',
-                                                      'USDT'
-                                                    ].map((currency) {
+                                                    value: _walletController
+                                                        .selectedWallet.value,
+                                                    items: _walletController
+                                                        .wallets
+                                                        .map((wallet) {
                                                       return DropdownMenuItem<
-                                                          String>(
-                                                        value: currency,
-                                                        child: Text(currency),
+                                                          Wallet>(
+                                                        value: wallet,
+                                                        child: Text(
+                                                            wallet.nameNode),
                                                       );
                                                     }).toList(),
                                                     onChanged:
-                                                        (String? newValue) {
-                                                      if (newValue != null) {
-                                                        _homeController
-                                                            .updateBalance(
-                                                                newValue);
+                                                        (Wallet? wallet) {
+                                                      if (wallet != null) {
+                                                        _walletController
+                                                            .selectWallet(
+                                                                wallet);
                                                       }
                                                     },
-                                                  )
+                                                  ),
                                                 ],
                                               ),
                                             ],
@@ -242,8 +245,12 @@ class HomeScreen extends StatelessWidget {
                                       CustomGridItem(
                                           title: 'Chuyển tiền',
                                           index: 2,
-                                          onPressed: () => Get.toNamed(
-                                              Routes.transferScreen),
+                                          onPressed: () {
+                                            _walletController.walletService
+                                                .disconnect();
+                                            return Get.toNamed(
+                                                Routes.transferScreen);
+                                          },
                                           imageUrl:
                                               'assets/images/transfer_icon.png'),
                                       CustomGridItem(

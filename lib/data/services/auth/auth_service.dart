@@ -3,10 +3,9 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:paychain_mobile/utils/configs/dio_config.dart';
-import 'package:paychain_mobile/data/models/user.dart';
 import 'package:paychain_mobile/modules/auth/dtos/login_success_dto.dart';
 
-import '../../../data/models/base_response.dart';
+import '../../models/base_response.dart';
 
 class AuthService {
   String hashPassword(String password) {
@@ -17,11 +16,10 @@ class AuthService {
 
   Future<BaseResponse> registerUser(String email, String password) async {
     try {
-      var user = User(email: email, password: hashPassword(password));
       var url = '/auth/register';
       var response = await defaultDio.post(
         url,
-        data: user.toJson(),
+        data: {'email': email, 'password': hashPassword(password)},
       );
       print(response.data);
       return Success(response.data);
@@ -56,7 +54,7 @@ class AuthService {
         url,
         data: {'email': email, 'password': hashPassword(password)},
       );
-      print(response.data);
+      // print(response.data!.wallets);
       return Success(LoginSuccessDto.fromJson(response.data));
     } on DioException catch (e) {
       return Failure(

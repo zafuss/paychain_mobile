@@ -1,3 +1,5 @@
+import 'package:paychain_mobile/data/models/wallet.dart';
+
 class LoginSuccessDto {
   final String accessToken;
   final String refreshToken;
@@ -5,6 +7,7 @@ class LoginSuccessDto {
   final String email;
   final String phoneNumber;
   final bool status;
+  final List<Wallet>? wallets;
 
   LoginSuccessDto(
       {required this.accessToken,
@@ -12,7 +15,14 @@ class LoginSuccessDto {
       required this.id,
       required this.email,
       required this.phoneNumber,
+      this.wallets,
       this.status = true});
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return 'accessToken: $accessToken, refreshToken: $refreshToken, id: $id, email: $email, phoneNumber: $phoneNumber, status: $status, wallets: $wallets';
+  }
 
   factory LoginSuccessDto.fromJson(Map<String, dynamic> json) {
     return LoginSuccessDto(
