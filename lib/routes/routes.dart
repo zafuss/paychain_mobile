@@ -15,6 +15,7 @@ class Routes {
   static String successTransferScreen = '/successTransferScreen';
   static String contactListScreen = '/contactListScreen';
   static String transactionsHistoryScreen = '/transactionsHistoryScreen';
+  static String accountsInfoScreen = '/accountsInfoScreen';
 }
 
 final getPages = [
@@ -37,4 +38,6 @@ final getPages = [
   GetPage(
       name: Routes.transactionsHistoryScreen,
       page: () => const TransactionsHistoryScreen()),
+  GetPage(
+      name: Routes.accountsInfoScreen, page: () => const AccountSInfoScreen()),
 ];

@@ -244,8 +244,12 @@ class HomeScreen extends StatelessWidget {
                                     mainAxisSpacing: 16.0,
                                     children: [
                                       CustomGridItem(
-                                          title: 'Tài khoản',
+                                          title: 'Ví',
                                           index: 1,
+                                          onPressed: () {
+                                            return Get.toNamed(
+                                                Routes.accountsInfoScreen);
+                                          },
                                           imageUrl:
                                               'assets/images/wallet_icon.png'),
                                       CustomGridItem(
