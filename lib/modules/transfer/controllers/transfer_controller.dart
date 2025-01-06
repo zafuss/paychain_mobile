@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:paychain_mobile/data/models/base_response.dart';
 import 'package:paychain_mobile/data/services/wallet/wallet_service.dart';
 import 'package:paychain_mobile/modules/transfer/dtos/transaction_request.dart';
+import 'package:paychain_mobile/modules/wallet/dtos/contact_response.dart';
 import 'package:paychain_mobile/routes/routes.dart';
 import 'package:paychain_mobile/utils/helpers/helpers.dart';
 
@@ -14,6 +15,7 @@ class TransferController extends GetxController {
   var receiveName = ''.obs;
   var amount = 0.0.obs;
   var errorString = ''.obs;
+  var currentEmail = "";
   final WalletService walletService = WalletService();
 
   final receiveAccountController = TextEditingController();
@@ -22,6 +24,16 @@ class TransferController extends GetxController {
   final transferNoteController = TextEditingController();
   final SharedPreferencesService _sharedPreferencesService =
       SharedPreferencesService();
+  var contactList = <ContactResponse>[].obs;
+
+  @override
+  void onInit() async {
+    super.onInit();
+    currentEmail = await _sharedPreferencesService
+            .getString(SharedPreferencesService.EMAIL) ??
+        "";
+    await getContactList();
+  }
 
   Future<void> getUserByAccount(String account, String sender) async {
     isGettingUser.value = true;
@@ -58,20 +70,41 @@ class TransferController extends GetxController {
     }
   }
 
+  Future<void> getContactList() async {
+    isLoading.value = true;
+
+    final result = await walletService.getContactList(currentEmail);
+    switch (result) {
+      case Success():
+        isLoading.value = false;
+        contactList.value = result.data!;
+        // Get.snackbar('Thông báo', result.data.toString());
+        break;
+      case Failure():
+        isLoading.value = false;
+        Get.snackbar('Lỗi lấy thông tin danh bạ ', result.message);
+        break;
+      default:
+        isLoading.value = false;
+        Get.snackbar('Lỗi lấy thông tin danh bạ ', 'Lỗi không xác định');
+        break;
+    }
+  }
+
   Future<void> sendTransaction(String accountSender) async {
     isLoading.value = true;
     final email = await _sharedPreferencesService
         .getString(SharedPreferencesService.EMAIL);
     TransactionRequest request = TransactionRequest(
-      emailSenderID: email,
-      accountSender: accountSender,
-      accountReceiver: receiveAccountController.text,
-      amount: double.parse(amountController.text),
-      fee: 0.1,
-      transactionDate: DateTime.now().toIso8601String(),
-      privateKey: "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCAT4wggE4AgEAAkEAmDQ",
-      note: transferNoteController.text,
-    );
+        emailSenderID: email,
+        accountSender: accountSender,
+        accountReceiver: receiveAccountController.text,
+        amount: double.parse(amountController.text),
+        fee: 0.1,
+        transactionDate: DateTime.now().toIso8601String(),
+        privateKey: "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCAT4wggE4AgEAAkEAmDQ",
+        note: transferNoteController.text,
+        saveContact: isSaveContactChecked.value);
     final result = await walletService.sendTransaction(request);
     switch (result) {
       case Success():

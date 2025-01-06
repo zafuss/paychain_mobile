@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:paychain_mobile/data/models/wallet.dart';
-import 'package:paychain_mobile/modules/wallet/controllers/wallet_controller.dart';
 import 'package:paychain_mobile/routes/routes.dart';
 import 'package:paychain_mobile/utils/constants/color_const.dart';
 import 'package:paychain_mobile/utils/constants/demension_const.dart';
-import 'package:paychain_mobile/utils/extensions/ext_box_decoration.dart';
 import 'package:paychain_mobile/modules/transfer/controllers/transfer_controller.dart';
 
-import '../../auth/controllers/auth_controller.dart';
 import '../../../shared/widgets/custom_appbar.dart';
 
 class SuccessTransferScreen extends StatelessWidget {
@@ -23,10 +19,9 @@ class SuccessTransferScreen extends StatelessWidget {
       statusBarColor: Colors.white,
       statusBarIconBrightness: Brightness.dark,
     ));
-    final _authController = Get.find<AuthController>();
     // ignore: no_leading_underscores_for_local_identifiers
     final _transferController = Get.put(TransferController());
-    final _walletController = Get.put(WalletController());
+
     // _walletController.connect(authController.currentEmail.value);
     return AnnotatedRegion(
       value: SystemUiOverlayStyle.dark,
@@ -69,7 +64,7 @@ class SuccessTransferScreen extends StatelessWidget {
                                 onPressed: () {
                                   Get.offAndToNamed(Routes.mainWrapper);
                                 },
-                                child: Text('Quay lại màn hình chính')),
+                                child: const Text('Quay lại màn hình chính')),
                           ],
                         ),
                       ),

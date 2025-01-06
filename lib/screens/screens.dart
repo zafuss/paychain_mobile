@@ -8,3 +8,6 @@ export '../modules/auth/screens/setting_screen.dart';
 export 'main_wrapper.dart';
 export '../modules/transfer/screens/transfer_screen.dart';
 export '../modules/transfer/screens/success_transfer_screen.dart';
+export '../modules/contacts/screens/contact_list_screen.dart';
+export '../modules/transactions_history/screens/transactions_history_screen.dart';
+export '../modules/accounts/screens/accounts_info_screen.dart';

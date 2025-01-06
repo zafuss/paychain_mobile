@@ -49,6 +49,7 @@ class TransferScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: kDefaultPadding),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,6 +110,144 @@ class TransferScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            _transferController.contactList.isEmpty
+                                ? const SizedBox()
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: kDefaultPadding),
+                                      Text(
+                                        'Danh bạ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium,
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Obx(
+                                        () => SizedBox(
+                                          height: 80,
+                                          child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: _transferController
+                                                  .contactList.length,
+                                              itemBuilder:
+                                                  (context, index) => InkWell(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                defaultBorderRadius),
+                                                        onTap: () async {
+                                                          if (_transferController
+                                                                  .receiveAccountController
+                                                                  .text ==
+                                                              _transferController
+                                                                  .contactList[
+                                                                      index]
+                                                                  .account) {
+                                                            _transferController
+                                                                .receiveAccountController
+                                                                .text = "";
+                                                            _transferController
+                                                                .receiveNameController
+                                                                .text = "";
+                                                          } else {
+                                                            _transferController
+                                                                    .receiveAccountController
+                                                                    .text =
+                                                                _transferController
+                                                                    .contactList[
+                                                                        index]
+                                                                    .account;
+                                                            await _transferController.getUserByAccount(
+                                                                _transferController
+                                                                    .receiveAccountController
+                                                                    .text,
+                                                                _walletController
+                                                                    .selectedWallet
+                                                                    .value!
+                                                                    .account);
+                                                          }
+                                                        },
+                                                        child: Container(
+                                                          margin: const EdgeInsets
+                                                              .only(
+                                                              right:
+                                                                  kMinPadding /
+                                                                      2),
+                                                          decoration: _transferController
+                                                                      .contactList[
+                                                                          index]
+                                                                      .account !=
+                                                                  _transferController
+                                                                      .receiveAccountController
+                                                                      .text
+                                                              ? Theme.of(
+                                                                      context)
+                                                                  .defaultBoxDecoration
+                                                              : Theme.of(
+                                                                      context)
+                                                                  .defaultBoxDecoration
+                                                                  .copyWith(
+                                                                      color: ColorPalette
+                                                                          .primary1),
+                                                          child: Center(
+                                                            child: Padding(
+                                                              padding: const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      kMinPadding),
+                                                              child: Column(
+                                                                mainAxisSize:
+                                                                    MainAxisSize
+                                                                        .min,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    _transferController
+                                                                        .contactList[
+                                                                            index]
+                                                                        .account,
+                                                                    style: _transferController.contactList[index].account !=
+                                                                            _transferController
+                                                                                .receiveAccountController.text
+                                                                        ? Theme.of(context)
+                                                                            .textTheme
+                                                                            .bodyLarge
+                                                                        : Theme.of(context)
+                                                                            .textTheme
+                                                                            .bodyLarge!
+                                                                            .copyWith(color: Colors.white),
+                                                                  ),
+                                                                  Text(
+                                                                    _transferController
+                                                                        .contactList[
+                                                                            index]
+                                                                        .name,
+                                                                    style: _transferController.contactList[index].account !=
+                                                                            _transferController
+                                                                                .receiveAccountController.text
+                                                                        ? Theme.of(context)
+                                                                            .textTheme
+                                                                            .bodyLarge
+                                                                        : Theme.of(context)
+                                                                            .textTheme
+                                                                            .bodyLarge!
+                                                                            .copyWith(color: Colors.white),
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                             const SizedBox(height: kDefaultPadding),
                             Container(
                               decoration:

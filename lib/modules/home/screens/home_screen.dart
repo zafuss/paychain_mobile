@@ -260,11 +260,15 @@ class HomeScreen extends StatelessWidget {
                                       CustomGridItem(
                                           title: 'Danh bạ',
                                           index: 3,
+                                          onPressed: () => Get.toNamed(
+                                              Routes.contactListScreen),
                                           imageUrl:
                                               'assets/images/contacts_icon.png'),
                                       CustomGridItem(
                                           title: 'Lịch sử',
                                           index: 4,
+                                          onPressed: () => Get.toNamed(
+                                              Routes.transactionsHistoryScreen),
                                           imageUrl:
                                               'assets/images/history_icon.png'),
                                     ],
