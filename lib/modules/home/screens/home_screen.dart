@@ -230,8 +230,107 @@ class HomeScreen extends StatelessWidget {
                                         ),
                                         Expanded(
                                           child: ElevatedButton(
-                                              onPressed: () {},
-                                              child: const Text('Nạp tiền')),
+                                              onPressed: () {
+                                                showModalBottomSheet(
+                                                  backgroundColor: Colors.white,
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        ListTile(
+                                                          leading: const Icon(
+                                                              Icons.add),
+                                                          title: const Text(
+                                                              'Tạo ví và group mới'),
+                                                          onTap: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        AlertDialog(
+                                                                          title:
+                                                                              const Text('Tạo ví và group mới'),
+                                                                          content:
+                                                                              const Text('Bạn có chắc chắn muốn tạo group mới?'),
+                                                                          actions: [
+                                                                            TextButton(
+                                                                                onPressed: () async {
+                                                                                  await _walletController.createWallet();
+                                                                                  await _walletController.createNode();
+                                                                                  await _walletController.addPeer();
+                                                                                  await _walletController.addNodeToWallet();
+                                                                                  _walletController.resetValue();
+                                                                                  Navigator.of(context).pop();
+                                                                                },
+                                                                                child: const Text('Tạo')),
+                                                                            TextButton(
+                                                                                onPressed: () {
+                                                                                  Navigator.of(context).pop();
+                                                                                },
+                                                                                child: const Text('Huỷ')),
+                                                                          ],
+                                                                        ));
+                                                          },
+                                                        ),
+                                                        ListTile(
+                                                          leading: const Icon(Icons
+                                                              .group_add_outlined),
+                                                          title: const Text(
+                                                              'Tạo ví và tham gia group có sẵn'),
+                                                          onTap: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (context) =>
+                                                                        AlertDialog(
+                                                                          title:
+                                                                              const Text('Tạo ví và tham gia group có sẵn'),
+                                                                          content:
+                                                                              TextField(
+                                                                            decoration:
+                                                                                const InputDecoration(hintText: 'Nhập nodeId của group'),
+                                                                            controller:
+                                                                                _walletController.nodeIdController,
+                                                                          ),
+                                                                          actions: [
+                                                                            TextButton(
+                                                                                onPressed: () async {
+                                                                                  _walletController.createdNodeId.value = _walletController.nodeIdController.text;
+                                                                                  await _walletController.createWallet();
+                                                                                  await _walletController.addNodeToWallet();
+                                                                                  _walletController.resetValue();
+                                                                                  Navigator.of(context).pop();
+                                                                                },
+                                                                                child: const Text('Tạo')),
+                                                                            TextButton(
+                                                                                onPressed: () {
+                                                                                  Navigator.of(context).pop();
+                                                                                  _walletController.resetValue();
+                                                                                },
+                                                                                child: const Text('Huỷ')),
+                                                                          ],
+                                                                        ));
+                                                          },
+                                                        ),
+                                                        const SizedBox(
+                                                          height: kMinPadding,
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: const Text('Thêm ví')),
                                         ),
                                       ],
                                     )),

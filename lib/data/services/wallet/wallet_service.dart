@@ -5,7 +5,6 @@ import 'package:paychain_mobile/data/models/user.dart';
 import 'package:paychain_mobile/data/models/wallet.dart';
 import 'package:paychain_mobile/modules/transfer/dtos/transaction_request.dart';
 import 'package:paychain_mobile/modules/wallet/dtos/contact_response.dart';
-import 'package:paychain_mobile/modules/wallet/dtos/wallet_response.dart';
 import 'package:paychain_mobile/utils/configs/dio_config.dart';
 import 'package:paychain_mobile/utils/helpers/datetime_compare.dart';
 import 'package:stomp_dart_client/stomp_dart_client.dart';
@@ -113,7 +112,7 @@ class WalletService {
       );
       // print(response.data!.wallets);
       return Success(
-        WalletResponse.fromJson(response.data),
+        TransactionResponse.fromJson(response.data['transaction']),
       );
     } on DioException catch (e) {
       return Failure(
@@ -139,6 +138,23 @@ class WalletService {
               .toList();
       data.sort((a, b) => compareTimes(a.timestamp, b.timestamp));
       return Success(data);
+    } on DioException catch (e) {
+      return Failure(
+          message: e.message ?? "Có lỗi xảy ra",
+          statusCode: e.response != null ? e.response!.statusCode! : 500);
+    }
+  }
+
+  createWallet(String email) async {
+    try {
+      var url = 'wallet/create';
+
+      var response = await defaultDio.post(
+        url,
+        data: {"email": email},
+      );
+      // print(response.data!.wallets);
+      return Success(response.data!['walletId']);
     } on DioException catch (e) {
       return Failure(
           message: e.message ?? "Có lỗi xảy ra",

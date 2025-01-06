@@ -20,7 +20,7 @@ class SuccessTransferScreen extends StatelessWidget {
       statusBarIconBrightness: Brightness.dark,
     ));
     // ignore: no_leading_underscores_for_local_identifiers
-    final _transferController = Get.put(TransferController());
+    final _transferController = Get.find<TransferController>();
 
     // _walletController.connect(authController.currentEmail.value);
     return AnnotatedRegion(
@@ -30,9 +30,6 @@ class SuccessTransferScreen extends StatelessWidget {
         appBar: CustomAppBar(
           context: context,
           title: 'Chuyển tiền thành công',
-          onBackPressed: () {
-            Get.back();
-          },
         ),
         body: Stack(
           children: [
@@ -49,20 +46,84 @@ class SuccessTransferScreen extends StatelessWidget {
                           children: [
                             Image.asset("assets/images/success_transfer.png"),
                             const SizedBox(height: kDefaultPadding),
-                            Text(
-                              'Chuyển tiền thành công!',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge!
-                                  .copyWith(
-                                    color: ColorPalette.primary1,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
+                            RichText(
+                                text: TextSpan(
+                                    text: 'Chuyển tiền thành công đến ',
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge!,
+                                    children: [
+                                  TextSpan(
+                                    text: _transferController
+                                        .successTransaction.value!.nameReceiver,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(
+                                          color: ColorPalette.primary1,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  )
+                                ])),
+                            RichText(
+                                text: TextSpan(
+                                    text: 'Số ví nhận ',
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge!,
+                                    children: [
+                                  TextSpan(
+                                    text: _transferController.successTransaction
+                                        .value!.accountReceiver,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(
+                                          color: ColorPalette.primary1,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  )
+                                ])),
+                            RichText(
+                                text: TextSpan(
+                                    text: 'Số tiền ',
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge!,
+                                    children: [
+                                  TextSpan(
+                                    text: _transferController
+                                        .successTransaction.value!.amount
+                                        .toString(),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(
+                                          color: ColorPalette.primary1,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  )
+                                ])),
+                            RichText(
+                                text: TextSpan(
+                                    text: 'Thời gian ',
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge!,
+                                    children: [
+                                  TextSpan(
+                                    text: _transferController
+                                        .successTransaction.value!.timestamp,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(
+                                          color: ColorPalette.primary1,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  )
+                                ])),
                             const SizedBox(height: kDefaultPadding),
                             ElevatedButton(
                                 onPressed: () {
                                   Get.offAndToNamed(Routes.mainWrapper);
+                                  Get.delete<TransferController>();
                                 },
                                 child: const Text('Quay lại màn hình chính')),
                           ],

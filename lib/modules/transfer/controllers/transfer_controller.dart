@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:paychain_mobile/data/models/base_response.dart';
+import 'package:paychain_mobile/data/models/transaction.dart';
 import 'package:paychain_mobile/data/services/wallet/wallet_service.dart';
 import 'package:paychain_mobile/modules/transfer/dtos/transaction_request.dart';
 import 'package:paychain_mobile/modules/wallet/dtos/contact_response.dart';
@@ -16,6 +17,7 @@ class TransferController extends GetxController {
   var amount = 0.0.obs;
   var errorString = ''.obs;
   var currentEmail = "";
+  var successTransaction = Rxn<TransactionResponse>();
   final WalletService walletService = WalletService();
 
   final receiveAccountController = TextEditingController();
@@ -91,7 +93,8 @@ class TransferController extends GetxController {
     }
   }
 
-  Future<void> sendTransaction(String accountSender) async {
+  Future<void> sendTransaction(
+      String accountSender, BuildContext context) async {
     isLoading.value = true;
     final email = await _sharedPreferencesService
         .getString(SharedPreferencesService.EMAIL);
@@ -109,6 +112,7 @@ class TransferController extends GetxController {
     switch (result) {
       case Success():
         isLoading.value = false;
+        successTransaction.value = result.data;
         Get.offAndToNamed(Routes.successTransferScreen);
         // Get.snackbar('Thông báo', result.data.toString());
         break;

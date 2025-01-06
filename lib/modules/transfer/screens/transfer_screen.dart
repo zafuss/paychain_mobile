@@ -24,7 +24,7 @@ class TransferScreen extends StatelessWidget {
     ));
     final _authController = Get.find<AuthController>();
     // ignore: no_leading_underscores_for_local_identifiers
-    final _transferController = Get.put(TransferController());
+    final _transferController = Get.put(TransferController(), permanent: true);
     final _walletController = Get.put(WalletController());
     // _walletController.connect(authController.currentEmail.value);
     return AnnotatedRegion(
@@ -688,7 +688,8 @@ class TransferScreen extends StatelessWidget {
                                                                   _walletController
                                                                       .selectedWallet
                                                                       .value!
-                                                                      .account);
+                                                                      .account,
+                                                                  context);
                                                         } else {
                                                           Get.snackbar(
                                                               'Xác thực thất bại',
