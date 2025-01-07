@@ -93,11 +93,15 @@ class SettingScreen extends StatelessWidget {
                                     style: AppTextStyles.title2.copyWith(
                                         color: ColorPalette.primary1)),
                                 const SizedBox(height: kMinPadding),
+                                _buildButton('Cài đặt chung',
+                                    () => Get.toNamed(Routes.infoScreen)),
                                 _buildButton('Thông tin cá nhân',
                                     () => Get.toNamed(Routes.infoScreen)),
-                                _buildButton('Đổi mật khẩu',
-                                    () => Get.toNamed(Routes.infoScreen)),
-                                _buildButton('Thông tin',
+                                _buildButton(
+                                    'Đổi mật khẩu',
+                                    () => Get.toNamed(
+                                        Routes.changePasswordScreen)),
+                                _buildButton('Thông tin ứng dụng',
                                     () => Get.toNamed(Routes.infoScreen)),
                               ],
                             ),

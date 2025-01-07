@@ -123,7 +123,7 @@ class SuccessTransferScreen extends StatelessWidget {
                             ElevatedButton(
                                 onPressed: () {
                                   Get.offAndToNamed(Routes.mainWrapper);
-                                  Get.delete<TransferController>();
+                                  Get.delete<TransferController>(force: true);
                                 },
                                 child: const Text('Quay lại màn hình chính')),
                           ],

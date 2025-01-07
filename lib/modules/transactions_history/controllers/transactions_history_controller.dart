@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:paychain_mobile/data/models/base_response.dart';
 import 'package:paychain_mobile/data/models/transaction.dart';
 import 'package:paychain_mobile/data/services/wallet/wallet_service.dart';
+import 'package:paychain_mobile/routes/routes.dart';
 import 'package:paychain_mobile/utils/helpers/helpers.dart';
 
 class TransactionsHistoryController extends GetxController {
@@ -32,6 +33,10 @@ class TransactionsHistoryController extends GetxController {
         break;
       case Failure():
         isLoading.value = false;
+        print(result.statusCode);
+        if (result.statusCode == 401) {
+          Get.offAndToNamed(Routes.loginScreen);
+        }
         Get.snackbar('Lỗi lấy thông tin lịch sử giao dịch ', result.message);
         break;
       default:

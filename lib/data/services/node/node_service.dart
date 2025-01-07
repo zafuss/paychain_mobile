@@ -19,7 +19,9 @@ class NodeService {
       return Success(response.data!['node']['id']);
     } on DioException catch (e) {
       return Failure(
-          message: e.message ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
@@ -34,7 +36,9 @@ class NodeService {
       return Success();
     } on DioException catch (e) {
       return Failure(
-          message: e.message ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
@@ -49,7 +53,9 @@ class NodeService {
       return Success(result.data['message']);
     } on DioException catch (e) {
       return Failure(
-          message: e.message ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
@@ -68,7 +74,9 @@ class NodeService {
       );
     } on DioException catch (e) {
       return Failure(
-          message: e.message ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
@@ -92,7 +100,9 @@ class NodeService {
       return Success(data);
     } on DioException catch (e) {
       return Failure(
-          message: e.message ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
@@ -109,7 +119,9 @@ class NodeService {
       return Success(response.data!['walletId']);
     } on DioException catch (e) {
       return Failure(
-          message: e.message ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }

@@ -32,7 +32,9 @@ class AuthService {
     } on DioException catch (e) {
       print(e.response!.data['message']);
       return Failure(
-          message: e.response!.data['message'] ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response!.statusCode ?? 500);
     }
   }
@@ -45,10 +47,71 @@ class AuthService {
         url,
         data: {'verificationCode': verificationCode, 'email': email},
       );
-      return Success(response.data);
+      return Success(LoginSuccessDto.fromJson(response.data));
     } on DioException catch (e) {
       return Failure(
           message: e.message ?? "Có lỗi xảy ra",
+          statusCode: e.response != null ? e.response!.statusCode! : 500);
+    }
+  }
+
+  Future<BaseResponse> changePassword(
+      String currentPassword, String newPassword, String email) async {
+    try {
+      var url = 'auth/change-password';
+      var response = await defaultDio.post(
+        url,
+        data: {
+          'password': hashPassword(currentPassword),
+          'newPassword': hashPassword(newPassword),
+          'email': email
+        },
+      );
+      return Success(response.data['message']);
+    } on DioException catch (e) {
+      return Failure(
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
+          statusCode: e.response != null ? e.response!.statusCode! : 500);
+    }
+  }
+
+  Future<BaseResponse> sendForgotPasswordOTP(String email) async {
+    try {
+      var url = 'auth/generateOTP';
+      var response = await defaultDio.post(
+        url,
+        data: {'email': email},
+      );
+      return Success(response.data);
+    } on DioException catch (e) {
+      return Failure(
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
+          statusCode: e.response != null ? e.response!.statusCode! : 500);
+    }
+  }
+
+  Future<BaseResponse> sendNewForgotPassword(
+      String email, String verificationCode, String password) async {
+    try {
+      var url = 'auth/forgot-password';
+      var response = await defaultDio.post(
+        url,
+        data: {
+          'email': email,
+          'verificationCode': verificationCode,
+          'password': hashPassword(password)
+        },
+      );
+      return Success(response.data);
+    } on DioException catch (e) {
+      return Failure(
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
@@ -65,7 +128,9 @@ class AuthService {
       return Success(LoginSuccessDto.fromJson(response.data));
     } on DioException catch (e) {
       return Failure(
-          message: e.message ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
@@ -88,7 +153,9 @@ class AuthService {
       return Success(LoginSuccessDto.fromJson(response.data));
     } on DioException catch (e) {
       return Failure(
-          message: e.message ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }

@@ -17,8 +17,9 @@ class AuthController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final currentPasswordController = TextEditingController();
   final otpController = TextEditingController();
-  RxInt remainingTime = 60.obs;
+  RxInt remainingTime = 0.obs;
   RxBool canCheckBiometrics = false.obs;
   final AuthService _authService = AuthService();
   final _sharedPreferencesService = SharedPreferencesService();
@@ -26,6 +27,7 @@ class AuthController extends GetxController {
   // var supportedBiometric = ''.obs;
 
   void resetText() {
+    currentPasswordController.clear();
     emailController.clear();
     passwordController.clear();
     confirmPasswordController.clear();
@@ -112,7 +114,77 @@ class AuthController extends GetxController {
     switch (result) {
       case Success():
         isLoading.value = false;
+        remainingTime.value = 60;
         Get.toNamed(Routes.otpScreen);
+        break;
+      case Failure():
+        isLoading.value = false;
+        Get.snackbar('Lỗi đăng ký tài khoản', result.message);
+        break;
+      default:
+        isLoading.value = false;
+        Get.snackbar('Lỗi đăng ký tài khoản', 'Lỗi không xác định');
+        break;
+    }
+  }
+
+  Future<void> sendForgotPasswordOTP() async {
+    isLoading.value = true;
+    final result =
+        await _authService.sendForgotPasswordOTP(emailController.text);
+    switch (result) {
+      case Success():
+        isLoading.value = false;
+        remainingTime.value = 120;
+        startCountdown();
+        break;
+      case Failure():
+        isLoading.value = false;
+        Get.snackbar('Lỗi đăng ký tài khoản', result.message);
+        break;
+      default:
+        isLoading.value = false;
+        Get.snackbar('Lỗi đăng ký tài khoản', 'Lỗi không xác định');
+        break;
+    }
+  }
+
+  Future<void> sendNewForgotPassword() async {
+    isLoading.value = true;
+    final result = await _authService.sendNewForgotPassword(
+        emailController.text, otpController.text, passwordController.text);
+    switch (result) {
+      case Success():
+        isLoading.value = false;
+        stopCountdown();
+        resetText();
+        Get.offAndToNamed(Routes.loginScreen);
+        Get.snackbar(
+            'Đổi mật khẩu thành công', 'Vui lòng đăng nhập lại vào ứng dụng');
+        break;
+      case Failure():
+        isLoading.value = false;
+        Get.snackbar('Lỗi đăng ký tài khoản', result.message);
+        break;
+      default:
+        isLoading.value = false;
+        Get.snackbar('Lỗi đăng ký tài khoản', 'Lỗi không xác định');
+        break;
+    }
+  }
+
+  Future<void> changePassword() async {
+    isLoading.value = true;
+    final result = await _authService.changePassword(
+        currentPasswordController.text,
+        passwordController.text,
+        currentEmail.value);
+    switch (result) {
+      case Success():
+        isLoading.value = false;
+        Get.back();
+        resetText();
+        Get.snackbar('Đổi mật khẩu thành công', result.data);
         break;
       case Failure():
         isLoading.value = false;
@@ -133,7 +205,7 @@ class AuthController extends GetxController {
       case Success():
         isLoading.value = false;
         otpController.clear();
-        resetCountdown();
+        resetCountdown(60);
         startCountdown();
         // Get.snackbar('Thông báo', result.data.toString());
         break;
@@ -156,10 +228,16 @@ class AuthController extends GetxController {
       case Success():
         isLoading.value = false;
         stopCountdown();
-        await _sharedPreferencesService.saveString(
-            SharedPreferencesService.EMAIL, emailController.text);
+        _sharedPreferencesService.saveAllUserData(
+            result.data!.email,
+            result.data!.name ?? "",
+            result.data!.phoneNumber,
+            result.data!.accessToken,
+            result.data!.refreshToken);
+        _sharedPreferencesService.saveBool(
+            SharedPreferencesService.IS_LOGGED_IN, true);
         Get.toNamed(Routes.mainWrapper);
-        Get.snackbar('Thông báo', result.data.toString());
+        Get.snackbar('Thông báo', "Đăng ký thành công! ");
         break;
       case Failure():
         isLoading.value = false;
@@ -190,6 +268,7 @@ class AuthController extends GetxController {
             result.data!.refreshToken);
         _sharedPreferencesService.saveBool(
             SharedPreferencesService.IS_LOGGED_IN, true);
+        resetText();
         // Get.delete<AuthController>(force: true);
         break;
       case Failure():
@@ -233,12 +312,12 @@ class AuthController extends GetxController {
         _sharedPreferencesService.saveBool(
             SharedPreferencesService.IS_LOGGED_IN, true);
         Get.offAndToNamed(Routes.mainWrapper);
-        // Get.delete<AuthController>(force: true);
         break;
       case Failure():
         isLoading.value = false;
         if (result.statusCode == 401) {
           Get.snackbar('Lỗi đăng nhập', 'Phiên đăng nhập đã hết hạn');
+          await _sharedPreferencesService.clearAllUserData();
           Get.offAndToNamed(Routes.loginScreen);
         } else {
           Get.snackbar('Lỗi đăng nhập', result.message);
@@ -273,11 +352,12 @@ class AuthController extends GetxController {
 
   // Hàm dừng đếm ngược
   void stopCountdown() {
+    remainingTime.value = 0;
     _timer?.cancel();
   }
 
   // Hàm reset đếm ngược về 60 giây
-  void resetCountdown() {
-    remainingTime.value = 60;
+  void resetCountdown(int second) {
+    remainingTime.value = second;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:paychain_mobile/utils/constants/color_const.dart';
 import 'package:paychain_mobile/utils/constants/demension_const.dart';
 
@@ -89,12 +90,6 @@ class InfoScreen extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    CircleAvatar(
-                                      radius: 35,
-                                      child: Image.asset(
-                                          'assets/images/fingerprint.png'),
-                                    ),
-                                    const SizedBox(width: kMinPadding),
                                     Expanded(
                                       child: Text(
                                           data['email'] ?? 'Email chưa có',
@@ -106,14 +101,18 @@ class InfoScreen extends StatelessWidget {
                                 const SizedBox(height: kMinPadding),
                                 _buildInfoRow('Tên hiển thị',
                                     data['name'] ?? 'Chưa có tên'),
-                                _buildInfoRow('Số điện thoại',
-                                    data['phone'] ?? 'Chưa có số điện thoại'),
+                                _buildInfoRow(
+                                    'Số điện thoại',
+                                    (data['phone'] != null &&
+                                            data['phone'] != '')
+                                        ? data['phone']!
+                                        : 'Chưa cập nhật'),
                                 const SizedBox(height: 24),
-                                ElevatedButton(
+                                OutlinedButton(
                                   onPressed: () {
-                                    // Xử lý sự kiện nút bấm
+                                    Get.back();
                                   },
-                                  child: const Text('Đổi mật khẩu'),
+                                  child: const Text('Trở về trang trước'),
                                 ),
                               ],
                             ),

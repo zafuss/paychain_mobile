@@ -1,6 +1,7 @@
 export '../modules/auth/screens/login_screen.dart';
 export '../modules/auth/screens/register_screen.dart';
 export '../modules/auth/screens/info_screen.dart';
+export '../modules/auth/screens/change_password_screen.dart';
 export '../modules/auth/screens/otp_screen.dart';
 export '../modules/auth/screens/forgot_password_screen.dart';
 export '../modules/home/screens/home_screen.dart';

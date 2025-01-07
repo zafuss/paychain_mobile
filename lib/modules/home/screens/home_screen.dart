@@ -374,6 +374,20 @@ class HomeScreen extends StatelessWidget {
                                               Routes.transactionsHistoryScreen),
                                           imageUrl:
                                               'assets/images/history_icon.png'),
+                                      CustomGridItem(
+                                          title: 'Thanh toán',
+                                          index: 5,
+                                          onPressed: () =>
+                                              _inProcessDialog(context),
+                                          imageUrl:
+                                              'assets/images/pay_icon.png'),
+                                      CustomGridItem(
+                                          title: 'Nạp điện thoại',
+                                          index: 6,
+                                          onPressed: () =>
+                                              _inProcessDialog(context),
+                                          imageUrl:
+                                              'assets/images/prepaid_icon.png'),
                                     ],
                                   ),
                                 ),
@@ -389,6 +403,19 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<dynamic> _inProcessDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              backgroundColor: Colors.white,
+              title: const Text('Thông báo'),
+              content: const Text('Tính năng đang được phát triển'),
+              actions: [
+                TextButton(onPressed: () => Get.back(), child: const Text('OK'))
+              ],
+            ));
   }
 
   Column _buildInfoRow(String title, String content) {

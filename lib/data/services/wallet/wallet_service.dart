@@ -26,18 +26,14 @@ class WalletService {
   }
 
   void connect(String email, Function(List<Wallet>) onWalletsUpdated) {
-    // Initialize StompClient with the onConnect callback inside the StompConfig
     _stompClient = StompClient(
       config: StompConfig(
         url: 'ws://localhost:8080/ws',
         onConnect: (StompFrame frame) {
-          // Now that the connection is established, we can safely send and subscribe
           print('Connected: $frame');
 
-          // Send a request for wallets
           _stompClient.send(destination: '/app/getWallets', body: email);
 
-          // Subscribe to the wallet topic for this email
           _stompClient.subscribe(
             destination: '/topic/wallets/$email',
             callback: (StompFrame frame) {
@@ -46,8 +42,7 @@ class WalletService {
                     List<Map<String, dynamic>>.from(jsonDecode(frame.body!));
                 final newWallets = data.map((e) => Wallet.fromJson(e)).toList();
                 print(newWallets);
-                onWalletsUpdated(
-                    newWallets); // Call the callback with new wallet data
+                onWalletsUpdated(newWallets);
               }
             },
           );
@@ -78,7 +73,9 @@ class WalletService {
       return Success(User.fromJson(response.data));
     } on DioException catch (e) {
       return Failure(
-          message: e.message ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
@@ -97,7 +94,9 @@ class WalletService {
       return Success(data.map((e) => ContactResponse.fromJson(e)).toList());
     } on DioException catch (e) {
       return Failure(
-          message: e.message ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
@@ -116,7 +115,9 @@ class WalletService {
       );
     } on DioException catch (e) {
       return Failure(
-          message: e.message ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
@@ -140,7 +141,9 @@ class WalletService {
       return Success(data);
     } on DioException catch (e) {
       return Failure(
-          message: e.message ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }
@@ -157,7 +160,9 @@ class WalletService {
       return Success(response.data!['walletId']);
     } on DioException catch (e) {
       return Failure(
-          message: e.message ?? "Có lỗi xảy ra",
+          message: e.response != null
+              ? e.response!.data!['message']
+              : "Có lỗi xảy ra",
           statusCode: e.response != null ? e.response!.statusCode! : 500);
     }
   }

@@ -17,6 +17,7 @@ class TransferController extends GetxController {
   var amount = 0.0.obs;
   var errorString = ''.obs;
   var currentEmail = "";
+  var currentName = "";
   var successTransaction = Rxn<TransactionResponse>();
   final WalletService walletService = WalletService();
 
@@ -34,6 +35,10 @@ class TransferController extends GetxController {
     currentEmail = await _sharedPreferencesService
             .getString(SharedPreferencesService.EMAIL) ??
         "";
+    currentName = await _sharedPreferencesService
+            .getString(SharedPreferencesService.NAME) ??
+        "";
+    transferNoteController.text = "$currentName chuyển tiền";
     await getContactList();
   }
 

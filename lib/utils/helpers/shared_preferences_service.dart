@@ -80,4 +80,18 @@ class SharedPreferencesService {
     prefs.setString(SharedPreferencesService.ACCESS_TOKEN, accessToken);
     prefs.setString(SharedPreferencesService.REFRESH_TOKEN, refreshToken);
   }
+
+  clearAllUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Xóa từng mục đã lưu
+    prefs.remove(SharedPreferencesService.EMAIL);
+    prefs.remove(SharedPreferencesService.NAME);
+    prefs.remove(SharedPreferencesService.PHONE_NUMBER);
+    prefs.remove(SharedPreferencesService.ACCESS_TOKEN);
+    prefs.remove(SharedPreferencesService.REFRESH_TOKEN);
+    prefs.setBool(SharedPreferencesService.IS_LOGGED_IN, false);
+    // Hoặc bạn có thể xóa toàn bộ dữ liệu (nếu không cần giữ lại bất kỳ dữ liệu nào khác):
+    // await prefs.clear();
+  }
 }

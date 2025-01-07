@@ -40,7 +40,7 @@ class OtpScreen extends StatelessWidget {
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                       authController.resetText();
-                      authController.resetCountdown();
+                      authController.resetCountdown(60);
                     },
                     child: const Text('Có'),
                   ),

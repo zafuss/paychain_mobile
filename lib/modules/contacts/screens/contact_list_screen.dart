@@ -65,44 +65,46 @@ class ContactListScreen extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            RichText(
-                                                text: TextSpan(
-                                                    text: 'Số tài khoản: ',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyLarge,
-                                                    children: [
-                                                  TextSpan(
-                                                      text: contact.account,
+                                        Expanded(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              RichText(
+                                                  text: TextSpan(
+                                                      text: 'Số tài khoản: ',
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .bodyLarge!
-                                                          .copyWith(
-                                                              color: ColorPalette
-                                                                  .primary1))
-                                                ])),
-                                            RichText(
-                                                text: TextSpan(
-                                                    text: 'Tên tài khoản: ',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyLarge,
-                                                    children: [
-                                                  TextSpan(
-                                                      text: contact.name,
+                                                          .bodyLarge,
+                                                      children: [
+                                                    TextSpan(
+                                                        text: contact.account,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyLarge!
+                                                            .copyWith(
+                                                                color: ColorPalette
+                                                                    .primary1))
+                                                  ])),
+                                              RichText(
+                                                  text: TextSpan(
+                                                      text: 'Tên tài khoản: ',
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .bodyLarge!
-                                                          .copyWith(
-                                                              color: ColorPalette
-                                                                  .primary1))
-                                                ])),
-                                          ],
+                                                          .bodyLarge,
+                                                      children: [
+                                                    TextSpan(
+                                                        text: contact.name,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyLarge!
+                                                            .copyWith(
+                                                                color: ColorPalette
+                                                                    .primary1))
+                                                  ])),
+                                            ],
+                                          ),
                                         ),
                                         IconButton(
                                             onPressed: () {

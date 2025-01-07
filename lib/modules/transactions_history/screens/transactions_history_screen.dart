@@ -196,17 +196,25 @@ class TransactionsHistoryScreen extends StatelessWidget {
                                                                       .textTheme
                                                                       .labelLarge!,
                                                                 ),
-                                                                Text(
-                                                                  transaction
-                                                                      .nameReceiver,
-                                                                  style: const TextStyle(
-                                                                      color: ColorPalette
-                                                                          .primary1,
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600),
+                                                                SizedBox(
+                                                                  width:
+                                                                      kMinPadding,
+                                                                ),
+                                                                Expanded(
+                                                                  child: Text(
+                                                                    textDirection:
+                                                                        TextDirection
+                                                                            .rtl,
+                                                                    transaction
+                                                                        .nameReceiver,
+                                                                    style: const TextStyle(
+                                                                        color: ColorPalette
+                                                                            .primary1,
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.w600),
+                                                                  ),
                                                                 ),
                                                               ],
                                                             ),
@@ -379,7 +387,12 @@ class TransactionsHistoryScreen extends StatelessWidget {
                                                       children: [
                                                     TextSpan(
                                                       text: transaction
-                                                          .nameReceiver,
+                                                                  .typeTransaction ==
+                                                              "SENDER"
+                                                          ? transaction
+                                                              .nameReceiver
+                                                          : transaction
+                                                              .nameSender,
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .bodyLarge!
