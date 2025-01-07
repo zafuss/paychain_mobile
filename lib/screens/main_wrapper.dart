@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/instance_manager.dart';
+import 'package:paychain_mobile/modules/notifications/notification_controller.dart';
 import 'package:paychain_mobile/utils/constants/color_const.dart';
 import 'package:paychain_mobile/screens/screens.dart';
 
@@ -16,6 +17,7 @@ class MainWrapper extends StatefulWidget {
 class _MainWrapperState extends State<MainWrapper> {
   late PageController pageController;
   final _mainWrapperController = Get.put(MainWrapperController());
+  final _notificationController = Get.put(NotificationController());
   @override
   void initState() {
     super.initState();

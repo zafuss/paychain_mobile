@@ -25,7 +25,8 @@ class WalletService {
     );
   }
 
-  void connect(String email, Function(List<Wallet>) onWalletsUpdated) {
+  void connect(String email, Function(List<Wallet>) onWalletsUpdated,
+      Function(String) onNotificationUpdated) {
     _stompClient = StompClient(
       config: StompConfig(
         url: 'ws://localhost:8080/ws',
@@ -38,11 +39,23 @@ class WalletService {
             destination: '/topic/wallets/$email',
             callback: (StompFrame frame) {
               if (frame.body != null) {
+                print('wallet subbed');
                 final data =
                     List<Map<String, dynamic>>.from(jsonDecode(frame.body!));
                 final newWallets = data.map((e) => Wallet.fromJson(e)).toList();
                 print(newWallets);
                 onWalletsUpdated(newWallets);
+              }
+            },
+          );
+          _stompClient.subscribe(
+            destination: '/topic/wallets/',
+            callback: (StompFrame frame) {
+              if (frame.body != null) {
+                print('wallet subbed');
+                final data = jsonDecode(frame.body!);
+
+                onNotificationUpdated(data);
               }
             },
           );

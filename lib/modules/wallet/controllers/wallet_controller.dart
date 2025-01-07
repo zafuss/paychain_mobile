@@ -25,7 +25,8 @@ class WalletController extends GetxController {
     final email = await _sharedPreferencesService
         .getString(SharedPreferencesService.EMAIL);
     print(email);
-    walletService.connect(email ?? "", _onWalletsUpdated);
+    walletService.connect(
+        email ?? "", _onWalletsUpdated, _onNotificationUpdated);
   }
 
   @override
@@ -46,6 +47,12 @@ class WalletController extends GetxController {
       }
     } else {
       selectedWallet.value = wallets.isNotEmpty ? wallets.first : null;
+    }
+  }
+
+  void _onNotificationUpdated(String message) {
+    if (message.isNotEmpty) {
+      Get.snackbar('Thông báo', message);
     }
   }
 
