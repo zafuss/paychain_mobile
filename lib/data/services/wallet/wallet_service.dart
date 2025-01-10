@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:paychain_mobile/data/models/transaction.dart';
 import 'package:paychain_mobile/data/models/user.dart';
 import 'package:paychain_mobile/data/models/wallet.dart';
@@ -13,6 +14,7 @@ import '../../models/base_response.dart';
 
 class WalletService {
   late StompClient _stompClient;
+  String prvKey = dotenv.env['PRV_KEY'] ?? 'Default';
 
   WalletService() {
     _stompClient = StompClient(
@@ -117,6 +119,7 @@ class WalletService {
   sendTransaction(TransactionRequest request) async {
     try {
       var url = 'wallet/send';
+      request.privateKey = prvKey;
       print(request.toJson());
       var response = await defaultDio.post(
         url,

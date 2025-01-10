@@ -110,7 +110,7 @@ class TransferController extends GetxController {
         amount: double.parse(amountController.text),
         fee: 0.1,
         transactionDate: DateTime.now().toIso8601String(),
-        privateKey: "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCAT4wggE4AgEAAkEAmDQ",
+        privateKey: '',
         note: transferNoteController.text,
         saveContact: isSaveContactChecked.value);
     final result = await walletService.sendTransaction(request);
