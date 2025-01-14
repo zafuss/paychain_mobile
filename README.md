@@ -5,7 +5,7 @@ Framework: Flutter
 
 Lưu ý: Project cần có backend để chạy cùng, để chạy demo project không cần backend cần phải chuyển sang nhánh demo: 
     https://github.com/zafuss/paychain_mobile/tree/demo
-hoặc dùng lệnh: git clone --branch demo https://github.com/zafuss/paychain_mobile.git
+hoặc clone bằng lệnh: git clone --branch demo https://github.com/zafuss/paychain_mobile.git
 
 Cách chạy chương trình:
 
