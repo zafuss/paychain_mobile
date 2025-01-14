@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:paychain_mobile/modules/auth/dtos/fast_login_request.dart';
 import 'package:paychain_mobile/utils/configs/dio_config.dart';
 import 'package:paychain_mobile/modules/auth/dtos/login_success_dto.dart';
+import 'package:paychain_mobile/utils/helpers/database_helper.dart';
 
 import '../../models/base_response.dart';
 
@@ -119,13 +120,31 @@ class AuthService {
   Future<BaseResponse<LoginSuccessDto>> loginUser(
       String email, String password) async {
     try {
-      var url = 'auth/login';
-      var response = await defaultDio.post(
-        url,
-        data: {'email': email, 'password': hashPassword(password)},
-      );
-      // print(response.data!.wallets);
-      return Success(LoginSuccessDto.fromJson(response.data));
+      // var url = 'auth/login';
+      // var response = await defaultDio.post(
+      //   url,
+      //   data: {'email': email, 'password': hashPassword(password)},
+      // );
+      // // print(response.data!.wallets);
+      // return Success(LoginSuccessDto.fromJson(response.data));
+
+      final dbHelper = DatabaseHelper.instance;
+      final userData = await dbHelper.getUserByEmail(email);
+
+      if (userData == null) {
+        return Failure(message: 'Email không tồn tại', statusCode: 404);
+      }
+
+      // Kiểm tra mật khẩu
+      final hashedInputPassword = hashPassword(password);
+      print(userData);
+
+      if (userData['password'] != hashedInputPassword) {
+        return Failure(message: 'Sai mật khẩu', statusCode: 401);
+      }
+
+      final user = LoginSuccessDto.fromJson(userData);
+      return Success(user);
     } on DioException catch (e) {
       return Failure(
           message: e.response != null
@@ -138,19 +157,26 @@ class AuthService {
   Future<BaseResponse<LoginSuccessDto>> fastLogin(
       FastLoginRequest request) async {
     try {
-      print(request.accessToken);
-      print(request.refreshToken);
-      var url = 'auth/fastLogin';
-      var response = await defaultDio.post(
-        url,
-        data: {
-          'email': request.email,
-          'accessToken': request.accessToken,
-          'refreshToken': request.refreshToken
-        },
-      );
-      // print(response.data!.wallets);
-      return Success(LoginSuccessDto.fromJson(response.data));
+      // print(request.accessToken);
+      // print(request.refreshToken);
+      // var url = 'auth/fastLogin';
+      // var response = await defaultDio.post(
+      //   url,
+      //   data: {
+      //     'email': request.email,
+      //     'accessToken': request.accessToken,
+      //     'refreshToken': request.refreshToken
+      //   },
+      // );
+      // // print(response.data!.wallets);
+      // return Success(LoginSuccessDto.fromJson(response.data));
+      final dbHelper = DatabaseHelper.instance;
+      final userData = await dbHelper.getUserByEmail(request.email);
+
+      if (userData == null) {
+        return Failure(message: 'Email không tồn tại', statusCode: 404);
+      }
+      return Success(LoginSuccessDto.fromJson(userData));
     } on DioException catch (e) {
       return Failure(
           message: e.response != null

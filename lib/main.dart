@@ -3,9 +3,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/route_manager.dart';
 import 'package:paychain_mobile/routes/routes.dart';
 import 'package:paychain_mobile/shared/theme/theme_const.dart';
+import 'package:paychain_mobile/utils/helpers/database_helper.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
+  await DatabaseHelper().database;
+
   runApp(const MyApp());
 }
 

@@ -93,16 +93,33 @@ class SettingScreen extends StatelessWidget {
                                     style: AppTextStyles.title2.copyWith(
                                         color: ColorPalette.primary1)),
                                 const SizedBox(height: kMinPadding),
-                                _buildButton('Cài đặt chung',
-                                    () => Get.toNamed(Routes.infoScreen)),
+                                // _buildButton('Cài đặt chung',
+                                //     () => Get.toNamed(Routes.infoScreen)),
                                 _buildButton('Thông tin cá nhân',
                                     () => Get.toNamed(Routes.infoScreen)),
+                                // _buildButton(
+                                //     'Đổi mật khẩu',
+                                //     () => Get.toNamed(
+                                //         Routes.changePasswordScreen)),
                                 _buildButton(
                                     'Đổi mật khẩu',
-                                    () => Get.toNamed(
-                                        Routes.changePasswordScreen)),
-                                _buildButton('Thông tin ứng dụng',
-                                    () => Get.toNamed(Routes.infoScreen)),
+                                    () => showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                              title: const Text('Thông báo'),
+                                              content: const Text(
+                                                  'Tính năng không khả dụng ở nhánh demo'),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: const Text('OK'))
+                                              ],
+                                            ))),
+                                // _buildButton('Thông tin ứng dụng',
+                                //     () => Get.toNamed(Routes.infoScreen)),
                               ],
                             ),
                           ),

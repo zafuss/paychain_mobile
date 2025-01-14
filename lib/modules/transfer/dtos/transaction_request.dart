@@ -6,6 +6,8 @@ class TransactionRequest {
   double? fee;
   String? privateKey;
   String? transactionDate;
+  String? receiverName;
+  String? senderName;
   String? note;
   bool saveContact;
 
@@ -19,6 +21,8 @@ class TransactionRequest {
       this.privateKey,
       this.transactionDate,
       this.note,
+      this.receiverName,
+      this.senderName,
       required this.saveContact});
 
   // toJson Method
@@ -31,6 +35,8 @@ class TransactionRequest {
       'fee': fee,
       'privateKey': privateKey,
       'transactionDate': transactionDate,
+      'receiverName': receiverName,
+      'senderName': senderName,
       'message': note,
       'saveContact': saveContact
     };

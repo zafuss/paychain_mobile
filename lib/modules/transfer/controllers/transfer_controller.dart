@@ -103,6 +103,7 @@ class TransferController extends GetxController {
     isLoading.value = true;
     final email = await _sharedPreferencesService
         .getString(SharedPreferencesService.EMAIL);
+
     TransactionRequest request = TransactionRequest(
         emailSenderID: email,
         accountSender: accountSender,
@@ -111,6 +112,8 @@ class TransferController extends GetxController {
         fee: 0.1,
         transactionDate: DateTime.now().toIso8601String(),
         privateKey: '',
+        receiverName: receiveNameController.text,
+        senderName: currentName,
         note: transferNoteController.text,
         saveContact: isSaveContactChecked.value);
     final result = await walletService.sendTransaction(request);

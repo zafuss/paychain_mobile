@@ -25,14 +25,38 @@ class WalletController extends GetxController {
     final email = await _sharedPreferencesService
         .getString(SharedPreferencesService.EMAIL);
     print(email);
-    walletService.connect(
-        email ?? "", _onWalletsUpdated, _onNotificationUpdated);
+    // walletService.connect(
+    //     email ?? "", _onWalletsUpdated, _onNotificationUpdated);
+    fetchWallets(email ?? '');
   }
 
   @override
   void onClose() {
     super.onClose();
     walletService.disconnect();
+  }
+
+  fetchWallets(String email) async {
+    isLoading.value = true;
+
+    final result = await walletService.getWalletsByEmail(email);
+
+    switch (result) {
+      case Success():
+        isLoading.value = false;
+        wallets.value = result.data;
+        selectedWallet.value = wallets.first;
+        // Get.snackbar('Thông báo', result.data.toString());
+        break;
+      case Failure():
+        isLoading.value = false;
+        Get.snackbar('Lỗi tạo thêm peer ', result.message);
+        break;
+      default:
+        isLoading.value = false;
+        Get.snackbar('Lỗi tạo thêm peer ', 'Lỗi không xác định');
+        break;
+    }
   }
 
   void _onWalletsUpdated(List<Wallet> newWallets) {

@@ -46,8 +46,15 @@ class AuthController extends GetxController {
         '';
     if (isLoggedIn.value) {
       await authenticate();
+    } else {
+      initDemoAccount();
     }
     // detectBiometricType();
+  }
+
+  void initDemoAccount() {
+    emailController.text = 'demoaccount1@gmail.com';
+    passwordController.text = '123456';
   }
 
   // Future<void> detectBiometricType() async {

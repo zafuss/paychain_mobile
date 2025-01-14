@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:paychain_mobile/modules/wallet/controllers/wallet_controller.dart';
 import 'package:paychain_mobile/routes/routes.dart';
 import 'package:paychain_mobile/utils/constants/color_const.dart';
 import 'package:paychain_mobile/utils/constants/demension_const.dart';
@@ -46,24 +47,29 @@ class SuccessTransferScreen extends StatelessWidget {
                           children: [
                             Image.asset("assets/images/success_transfer.png"),
                             const SizedBox(height: kDefaultPadding),
-                            RichText(
-                                text: TextSpan(
-                                    text: 'Chuyển tiền thành công đến ',
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge!,
-                                    children: [
-                                  TextSpan(
-                                    text: _transferController
-                                        .successTransaction.value!.nameReceiver,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge!
-                                        .copyWith(
-                                          color: ColorPalette.primary1,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                  )
-                                ])),
+                            Align(
+                              child: RichText(
+                                  text: TextSpan(
+                                      text: 'Chuyển tiền thành công đến ',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!,
+                                      children: [
+                                    TextSpan(
+                                      text: _transferController
+                                          .successTransaction
+                                          .value!
+                                          .nameReceiver,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                            color: ColorPalette.primary1,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                    )
+                                  ])),
+                            ),
                             RichText(
                                 text: TextSpan(
                                     text: 'Số ví nhận ',
@@ -124,6 +130,7 @@ class SuccessTransferScreen extends StatelessWidget {
                                 onPressed: () {
                                   Get.offAndToNamed(Routes.mainWrapper);
                                   Get.delete<TransferController>(force: true);
+                                  Get.delete<WalletController>(force: true);
                                 },
                                 child: const Text('Quay lại màn hình chính')),
                           ],

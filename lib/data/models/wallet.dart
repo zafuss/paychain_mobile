@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:paychain_mobile/data/models/transaction.dart';
 import 'package:paychain_mobile/utils/helpers/round_crypto.dart';
 
@@ -8,6 +10,7 @@ class Wallet {
   final double balance;
   final String nameNode;
   final String? nodeId;
+  final String? email;
   final List<TransactionResponse>? transactions;
 
   Wallet(
@@ -16,6 +19,7 @@ class Wallet {
       required this.balance,
       required this.nameNode,
       this.nodeId,
+      this.email,
       this.transactions});
 
   @override
@@ -27,16 +31,23 @@ class Wallet {
   /// Chuyển đổi từ JSON sang đối tượng Wallet
   factory Wallet.fromJson(Map<String, dynamic> json) {
     return Wallet(
-        id: json['id'] as String,
+        id: json['id'] ?? '',
         account: json['account'] as String,
         balance: roundCrypto(json['balance'], 4), // Đảm bảo kiểu double
         nameNode: json['nameNode'] as String,
+        // transactions: json['transaction'] != null
+        //     ? (json['transaction'] as List)
+        //         .map((transactionJson) =>
+        //             TransactionResponse.fromJson(transactionJson))
+        //         .toList()
+        //     : null, // Nếu không có transactions, trả về null
         transactions: json['transaction'] != null
-            ? (json['transaction'] as List)
+            ? (jsonDecode(json['transaction']) as List)
                 .map((transactionJson) =>
                     TransactionResponse.fromJson(transactionJson))
                 .toList()
-            : null, // Nếu không có transactions, trả về null
+            : null,
+        email: json['email'] ?? '',
         nodeId: json['node']);
   }
 
@@ -47,6 +58,7 @@ class Wallet {
       'account': account,
       'balance': roundCrypto(balance, 4),
       'nameNode': nameNode,
+      'email': email,
       'transactions': transactions
     };
   }

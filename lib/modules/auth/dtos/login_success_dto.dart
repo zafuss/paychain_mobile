@@ -28,9 +28,9 @@ class LoginSuccessDto {
 
   factory LoginSuccessDto.fromJson(Map<String, dynamic> json) {
     return LoginSuccessDto(
-      accessToken: json['accessToken'],
-      refreshToken: json['refreshToken'],
-      id: json['id'],
+      accessToken: json['accessToken'] ?? '',
+      refreshToken: json['refreshToken'] ?? '',
+      id: json['id'] ?? '',
       name: json['name'],
       email: json['email'],
       phoneNumber: json['phoneNumber'] ?? '',

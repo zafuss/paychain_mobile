@@ -129,8 +129,24 @@ class LoginScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(
                                           defaultBorderRadius),
                                       onTap: () {
-                                        Get.toNamed(
-                                            Routes.forgotPasswordScreen);
+                                        // Get.toNamed(
+                                        //     Routes.forgotPasswordScreen);
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                                  title:
+                                                      const Text('Thông báo'),
+                                                  content: const Text(
+                                                      'Tính năng không khả dụng ở nhánh demo'),
+                                                  actions: [
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: const Text('OK'))
+                                                  ],
+                                                ));
                                       },
                                       child: Text(
                                         'Quên mật khẩu?',
@@ -234,6 +250,21 @@ class LoginScreen extends StatelessWidget {
                           onPressed: () {
                             Get.offAndToNamed(Routes.registerScreen);
                             authController.resetText();
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title: const Text('Thông báo'),
+                                      content: const Text(
+                                          'Tính năng không khả dụng ở nhánh demo'),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('OK'))
+                                      ],
+                                    )).then(
+                                (_) => Get.offAndToNamed(Routes.loginScreen));
                           },
                           child: RichText(
                               text: TextSpan(
